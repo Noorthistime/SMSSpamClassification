@@ -1,0 +1,1003 @@
+import streamlit as st
+import numpy as np
+import pandas as pd
+import re
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.tree import DecisionTreeClassifier
+
+# Ensure nltk packages are available silently
+
+try:
+    stopwords.words("english")
+    WordNetLemmatizer().lemmatize("word")
+except LookupError:
+    nltk.download('stopwords', quiet=True)
+    nltk.download('wordnet', quiet=True)
+
+st.set_page_config(page_title="SMS Spam Classification", layout="wide")
+
+st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.12);
+        --glass-border: rgba(255, 255, 255, 0.32);
+        --glass-shadow: 0 12px 36px rgba(8, 15, 40, 0.28);
+        --brand-1: #00c2ff;
+        --brand-2: #4f46e5;
+        --brand-3: #26d9a4;
+    }
+
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .stApp {
+        background:
+            radial-gradient(circle at 10% 12%, rgba(38, 217, 164, 0.18), transparent 34%),
+            radial-gradient(circle at 88% 20%, rgba(0, 194, 255, 0.18), transparent 40%),
+            radial-gradient(circle at 50% 86%, rgba(79, 70, 229, 0.2), transparent 45%),
+            linear-gradient(145deg, #0b1220 0%, #121f37 46%, #0b182f 100%);
+        background-attachment: fixed;
+        color: #eef3ff;
+    }
+
+    /* Keep header transparent without hiding it */
+    [data-testid="stHeader"] {
+        background: transparent !important;
+    }
+    .main .block-container {
+        padding-top: 0rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    @keyframes orbFloat {
+        0% { transform: translate3d(0, 0, 0) scale(1); }
+        50% { transform: translate3d(0, -14px, 0) scale(1.05); }
+        100% { transform: translate3d(0, 0, 0) scale(1); }
+    }
+
+    @keyframes pulseGlow {
+        0% { box-shadow: 0 0 0 rgba(0, 194, 255, 0.0), 0 10px 26px rgba(10, 18, 42, 0.35); }
+        50% { box-shadow: 0 0 22px rgba(79, 70, 229, 0.45), 0 14px 34px rgba(10, 18, 42, 0.45); }
+        100% { box-shadow: 0 0 0 rgba(0, 194, 255, 0.0), 0 10px 26px rgba(10, 18, 42, 0.35); }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: -220% 0; }
+        100% { background-position: 220% 0; }
+    }
+
+    .stApp::before,
+    .stApp::after {
+        content: "";
+        position: fixed;
+        border-radius: 999px;
+        filter: blur(52px);
+        z-index: 0;
+        pointer-events: none;
+        animation: orbFloat 9s ease-in-out infinite;
+    }
+
+    .stApp::before {
+        width: 260px;
+        height: 260px;
+        right: 10%;
+        top: 15%;
+        background: rgba(0, 194, 255, 0.18);
+    }
+
+    .stApp::after {
+        width: 300px;
+        height: 300px;
+        left: 8%;
+        bottom: 8%;
+        background: rgba(38, 217, 164, 0.16);
+        animation-delay: -3s;
+    }
+
+    [data-testid="stHeader"] {
+        background: transparent;
+    }
+
+    [data-testid="stSidebar"] > div {
+        background: linear-gradient(165deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+        backdrop-filter: none;
+    }
+
+    [data-testid="stAppViewContainer"] > .main {
+        position: relative;
+        z-index: 1;
+    }
+
+    [data-testid="stVerticalBlock"] > div:has(> [data-testid="stMarkdownContainer"]),
+    div[data-testid="stDataFrame"],
+    div[data-testid="stAlert"],
+    div.stCodeBlock {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        box-shadow: var(--glass-shadow);
+        transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    }
+
+    [data-testid="stVerticalBlock"] > div:has(> [data-testid="stMarkdownContainer"]):hover,
+    div[data-testid="stDataFrame"]:hover,
+    div[data-testid="stAlert"]:hover,
+    div.stCodeBlock:hover {
+        transform: translateY(-2px);
+        border-color: rgba(0, 194, 255, 0.5);
+        box-shadow: 0 0 18px rgba(0, 194, 255, 0.2), 0 16px 34px rgba(8, 15, 40, 0.36);
+    }
+
+    h1, h2, h3 {
+        letter-spacing: 0.2px;
+        text-shadow: 0 0 18px rgba(79, 70, 229, 0.28);
+    }
+
+    .premium-hero {
+        position: relative;
+        margin: -45px 0 20px 0 !important;
+        padding: 20px 24px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: linear-gradient(130deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+        backdrop-filter: blur(18px);
+        box-shadow: 0 16px 38px rgba(4, 12, 34, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        overflow: hidden;
+        transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        text-align: center;
+    }
+
+    .premium-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        background-size: 220% 100%;
+        animation: shimmer 6.5s linear infinite;
+        pointer-events: none;
+    }
+
+    .premium-hero:hover {
+        transform: translateY(-3px);
+        border-color: rgba(0, 194, 255, 0.78);
+        box-shadow: 0 0 30px rgba(0, 194, 255, 0.35), 0 18px 42px rgba(4, 12, 34, 0.5);
+    }
+
+    .premium-hero h1 {
+        margin: 0;
+        font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+        font-weight: 800;
+        color: #f5f9ff;
+        letter-spacing: 0.35px;
+        text-shadow: 0 0 16px rgba(79, 70, 229, 0.35);
+        position: relative;
+        z-index: 1;
+    }
+
+    .run-output-box {
+        margin-top: 8px;
+        padding: 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+        box-shadow: 0 12px 30px rgba(8, 15, 40, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+
+    .stButton > button {
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        color: #eef3ff;
+        background: linear-gradient(120deg, rgba(0, 194, 255, 0.22), rgba(79, 70, 229, 0.24), rgba(38, 217, 164, 0.2));
+        background-size: 220% 220%;
+        box-shadow: 0 10px 26px rgba(10, 18, 42, 0.35);
+        transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-2px) scale(1.01);
+        border-color: rgba(255, 255, 255, 0.9);
+        animation: pulseGlow 1.8s ease-in-out infinite;
+    }
+
+    .stButton > button:active {
+        transform: scale(0.98);
+        box-shadow: 0 0 24px rgba(0, 194, 255, 0.55);
+    }
+
+    [data-testid="stTextInput"] input,
+    [data-testid="stTextArea"] textarea,
+    [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        border-radius: 12px !important;
+        color: #eef3ff !important;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    [data-testid="stTextInput"] input:focus,
+    [data-testid="stTextArea"] textarea:focus {
+        border-color: rgba(0, 194, 255, 0.9) !important;
+        box-shadow: 0 0 0 0.22rem rgba(0, 194, 255, 0.24) !important;
+    }
+
+    [data-testid="stTabs"] [role="tab"] {
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+
+    [data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        box-shadow: 0 0 14px rgba(79, 70, 229, 0.32);
+    }
+
+    .stMarkdown hr {
+        border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .stCodeBlock {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stCodeBlock::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.14) 48%, transparent 100%);
+        background-size: 220% 100%;
+        animation: shimmer 7s linear infinite;
+        pointer-events: none;
+    }
+
+    /* Style the radio items as beautiful horizontal tabs/buttons */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 10px;
+    }
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        padding: 12px 16px !important;
+        border-radius: 12px !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 0px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+        background: rgba(0, 194, 255, 0.08) !important;
+        border-color: rgba(0, 194, 255, 0.4) !important;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 194, 255, 0.15);
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label div[data-testid="stMarkdownContainer"] p {
+        color: #f5f9ff !important;
+    }
+
+    /* Style for checked state */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(0, 194, 255, 0.22), rgba(79, 70, 229, 0.24)) !important;
+        border-color: rgba(0, 194, 255, 0.7) !important;
+        box-shadow: 0 0 15px rgba(0, 194, 255, 0.25), inset 0 0 8px rgba(0, 194, 255, 0.15);
+    }
+
+    /* Keep the active cyan highlight in both modes */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"] *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) * {
+        color: #00c2ff !important;
+        font-weight: 600 !important;
+    }
+
+    /* Hide the radio bullet circle to keep it modern and clean */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
+        display: none !important;
+    }
+
+    /* Hide redundant radio widget label */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > label {
+        display: none !important;
+    }
+
+    /* Typography fixes for sidebar header */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: #f5f9ff !important;
+        font-weight: 700;
+        text-shadow: 0 0 12px rgba(0, 194, 255, 0.35);
+        margin-bottom: 12px !important;
+    }
+
+    @keyframes techPulse {
+        0% { text-shadow: 0 0 4px rgba(0, 194, 255, 0.4); color: #00c2ff; }
+        50% { text-shadow: 0 0 12px rgba(0, 194, 255, 0.8), 0 0 20px rgba(0, 194, 255, 0.4); color: #eef3ff; }
+        100% { text-shadow: 0 0 4px rgba(0, 194, 255, 0.4); color: #00c2ff; }
+    }
+    .tech-hover-container {
+        position: relative;
+        display: inline-block;
+        cursor: help;
+    }
+    .glow-tech {
+        font-weight: 600;
+        text-decoration: underline dotted rgba(0, 194, 255, 0.6) !important;
+        animation: techPulse 2s infinite ease-in-out;
+        display: inline-block;
+        padding: 0 2px;
+        color: #00c2ff !important;
+        transition: all 0.25s ease;
+    }
+    .tech-tooltip-box {
+        visibility: hidden;
+        opacity: 0;
+        width: 320px;
+        background: rgba(10, 20, 42, 0.98) !important;
+        color: #eef3ff !important;
+        text-align: left;
+        border: 1px solid rgba(0, 194, 255, 0.45);
+        border-radius: 10px;
+        padding: 14px;
+        position: absolute;
+        z-index: 9999;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 20px rgba(0, 194, 255, 0.25);
+        pointer-events: none;
+        font-size: 0.9em;
+        line-height: 1.4;
+        font-weight: normal;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+    .tech-tooltip-box strong {
+        color: #00c2ff !important;
+        font-size: 1.05em;
+        display: block;
+        margin-bottom: 6px;
+    }
+    .tech-tooltip-box::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -6px;
+        border-width: 6px;
+        border-style: solid;
+        border-color: rgba(10, 20, 42, 0.98) transparent transparent transparent;
+    }
+    .tech-hover-container:hover .tech-tooltip-box {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    .tech-hover-container:hover .glow-tech {
+        color: #fff !important;
+        text-shadow: 0 0 15px rgba(0, 194, 255, 1) !important;
+    }
+
+    /* Premium glassmorphic background for the navigation panel */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, rgba(10, 17, 32, 0.95) 0%, rgba(3, 7, 18, 0.98) 100%) !important;
+        border-right: 1px solid rgba(0, 194, 255, 0.15) !important;
+        box-shadow: 6px 0 25px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    /* Structured content cards for layout columns */
+    [data-testid="column"] {
+        background: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        border-radius: 16px !important;
+        padding: 22px !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+        margin-bottom: 15px !important;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    [data-testid="column"]:hover {
+        border-color: rgba(0, 194, 255, 0.15) !important;
+        box-shadow: 0 8px 32px rgba(0, 194, 255, 0.03) !important;
+    }
+
+    /* Professional subheadings structure */
+    div[data-testid="stMarkdownContainer"] h2 {
+        color: #eef3ff !important;
+        font-weight: 600 !important;
+        font-size: 1.35em !important;
+        border-bottom: 2px solid rgba(0, 194, 255, 0.25) !important;
+        padding-bottom: 8px !important;
+        margin-top: 10px !important;
+        margin-bottom: 16px !important;
+        letter-spacing: 0.5px !important;
+    }
+    div[data-testid="stMarkdownContainer"] h3 {
+        color: #00c2ff !important;
+        font-weight: 500 !important;
+        font-size: 1.12em !important;
+        padding-bottom: 4px !important;
+        margin-top: 10px !important;
+        margin-bottom: 12px !important;
+        letter-spacing: 0.5px !important;
+    }
+
+</style>
+""", unsafe_allow_html=True)
+
+def show_explanation(text, technique=None):
+    st.markdown(f'<div style="background: rgba(0, 194, 255, 0.12); border-left: 4px solid #00c2ff; padding: 12px 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(0, 194, 255, 0.25);"><strong style="color: #00c2ff; font-size: 1.05em; display: block; margin-bottom: 6px;">What this block did:</strong><span style="color: var(--text-color); font-size: 0.95em; line-height: 1.5;">{text}</span></div>', unsafe_allow_html=True)
+
+def render_explain_button(tab_name, explanation_text, technique=None):
+    btn_key = f"explain_state_{tab_name}"
+    if btn_key not in st.session_state:
+        st.session_state[btn_key] = False
+
+    st.write("---")
+    if st.button("What's Happening", key=f"explain_btn_{tab_name}"):
+        st.session_state[btn_key] = not st.session_state[btn_key]
+
+    if st.session_state[btn_key]:
+        st.markdown(f'<div style="background: rgba(0, 194, 255, 0.12); border-left: 4px solid #00c2ff; padding: 12px 16px; border-radius: 12px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(0, 194, 255, 0.25);"><strong style="color: #00c2ff; font-size: 1.05em; display: block; margin-bottom: 6px;">Page Explanation:</strong><span style="color: var(--text-color); font-size: 0.95em; line-height: 1.5;">{explanation_text}</span></div>', unsafe_allow_html=True)
+
+
+
+
+
+
+st.sidebar.title("Navigation")
+menu = st.sidebar.radio("Go to", ["Project Overview", "1. Data Loading & Visualization", "2. Model Training & Evaluation", "3. Live Prediction Test", "4. Full Code Explorer", "5. View Raw Source Code"])
+
+
+@st.cache_resource
+def load_and_preprocess_data():
+    dataset = pd.read_csv("SMSSpamCollection", sep='\t', names=['label', 'message'])
+    dataset['label'] = dataset['label'].map({'ham':0 ,'spam':1})
+    
+    # Handle Imbalance
+    only_spam = dataset[dataset["label"] == 1]
+    count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])
+    for i in range(0, count-1):
+        dataset = pd.concat([dataset, only_spam])
+        
+    dataset['word_count'] = dataset['message'].apply(lambda x: len(x.split()))
+    
+    def currency(data):
+        currency_symbols = ['$','€','₹','¥','₺']
+        for i in currency_symbols:
+            if i in data:
+                return 1
+        return 0
+    dataset["contains_currency_symbols"] = dataset["message"].apply(currency)
+    
+    def number(data):
+        for i in data:
+            if ord(i) >= 48 and ord(i) <= 57:
+                return 1
+        return 0
+    dataset["contains_number"] = dataset['message'].apply(number)
+    
+    return dataset
+
+dataset = load_and_preprocess_data()
+
+@st.cache_resource
+def train_model():
+    dataset = load_and_preprocess_data()
+    wnl = WordNetLemmatizer()
+    stop_words = set(stopwords.words('english'))
+    corpus = []
+    
+    for sms in list(dataset.message):
+        message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=sms).lower()
+        words = message.split()
+        filtered_words = [word for word in words if word not in stop_words]
+        lemm_words = [wnl.lemmatize(word) for word in filtered_words]
+        message = ' '.join(lemm_words)
+        corpus.append(message)
+        
+    tfidf = TfidfVectorizer(max_features=500)
+    vectors = tfidf.fit_transform(corpus).toarray()
+    feature_names = tfidf.get_feature_names_out()
+    
+    X = pd.DataFrame(vectors, columns=feature_names)
+    y = dataset['label']
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    mnb = MultinomialNB()
+    mnb.fit(X_train, y_train)
+    y_pred = mnb.predict(X_test)
+    
+    return tfidf, feature_names, mnb, X, X_train, y_train, X_test, y_test, y_pred
+
+tfidf, feature_names, mnb, X, X_train, y_train, X_test, y_test, y_pred = train_model()
+
+st.markdown("""
+<div class="premium-hero">
+    <h1>SMS Spam Classification</h1>
+</div>
+</div>
+""", unsafe_allow_html=True)
+
+if menu != "Project Overview":
+    st.markdown(f"""
+    <div style="text-align: center; margin-top: -10px; margin-bottom: 25px;">
+        <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 18px; border-radius: 30px; color: #8a99ad; font-size: 0.85em; font-weight: 500; letter-spacing: 0.5px; display: inline-block; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
+            {menu}
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
+
+if menu == "Project Overview":
+    st.markdown("""<div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);">
+<h2 style="color: #00c2ff; margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 1.65em;">• Project Abstract & Overview</h2>
+<p style="color: #eef3ff; font-size: 1.05em; line-height: 1.6; margin-bottom: 20px;">The SMS Spam Classifier is a highly responsive machine learning application designed to inspect SMS messages and isolate malicious spam from legitimate user communications. The dashboard parses message lines, normalizes them via lemmatization to extract base roots, and structures the text data using TF-IDF weighting vectors. By fitting a Naive Bayes probability model over these vectors, the pipeline determines category likelihoods to isolate unsolicited spam with high reliability. This console helps developers and analysts audit the visual features, balance classes, inspect model precision, and run real-time inference tests.</p>
+
+<!-- Core Objective Box (Full width) -->
+<div style="background: rgba(38, 217, 164, 0.06); border: 1px solid rgba(38, 217, 164, 0.2); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: #26d9a4; margin-top: 0; margin-bottom: 8px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Core Objective</h3>
+<p style="color: #eef3ff; font-size: 0.98em; line-height: 1.5; margin-bottom: 0;">Protect user message feeds from spam vectors by building a robust text classification pipeline that automatically categorises messages into Ham (safe/legitimate message threads) or Spam (malicious links, ads, or unsolicited scams).</p>
+</div>
+
+<!-- Pipeline Workflow Panel (Full width) -->
+<div style="background: rgba(255, 159, 28, 0.05); border: 1px solid rgba(255, 159, 28, 0.22); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: #ff9f1c; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Pipeline Workflow</h3>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">01</div>
+<div>
+<strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Dataset Load & Class Balancing</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Parses ham/spam raw entries and counters category skewness by oversampling the minority Spam class to parity.</span>
+</div>
+</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">02</div>
+<div>
+<strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Clean & Tokenize Text</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Scrubs formatting, lowercases message symbols, removes numeric characters, and strips stop words.</span>
+</div>
+</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">03</div>
+<div>
+<strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">WordNet Lemmatization</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Applies NLTK WordNet Lemmatization to convert words back to dictionary roots (e.g. "studying" maps to "study"), preserving semantic syntax.</span>
+</div>
+</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">04</div>
+<div>
+<strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">TF-IDF Feature Extraction</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Translates strings into frequency-weighted vector configurations using a Term Frequency-Inverse Document Frequency vectorizer.</span>
+</div>
+</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">05</div>
+<div>
+<strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Multinomial Naive Bayes Modeling</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Trains a Naive Bayes model using joint likelihood calculations to predict the spam probability profile.</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Technologies Used Box (Full width) -->
+<div style="background: rgba(156, 39, 176, 0.04); border: 1px solid rgba(156, 39, 176, 0.18); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: #b854ff; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Technologies Used</h3>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; gap: 4px; flex-direction: column;">
+<strong style="color: #eef3ff; font-size: 0.98em;">1. Natural Language Toolkit (NLTK)</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4; padding-left: 20px;">Supplies structural tokenization patterns and links the WordNet Lemmatizer definitions.</span>
+</div>
+<div style="display: flex; gap: 4px; flex-direction: column;">
+<strong style="color: #eef3ff; font-size: 0.98em;">2. Scikit-Learn</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4; padding-left: 20px;">Provides the TfidfVectorizer utility and compiles the Multinomial Naive Bayes model.</span>
+</div>
+<div style="display: flex; gap: 4px; flex-direction: column;">
+<strong style="color: #eef3ff; font-size: 0.98em;">3. Pandas & NumPy</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4; padding-left: 20px;">Manage data collection structures, clean imbalanced ratios, and organize high-dimensional feature arrays.</span>
+</div>
+<div style="display: flex; gap: 4px; flex-direction: column;">
+<strong style="color: #eef3ff; font-size: 0.98em;">4. Seaborn & Matplotlib</strong>
+<span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4; padding-left: 20px;">Plot class frequency curves and confusion matrix charts to inspect classification quality.</span>
+</div>
+</div>
+</div>
+
+<!-- Metrics Ribbon -->
+<div style="margin-top: 24px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.15); padding: 16px; border-radius: 12px; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; gap: 16px;">
+<div>
+<div style="font-size: 1.8em; font-weight: bold; color: #00c2ff;">5,574</div>
+<div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Raw Messages</div>
+</div>
+<div style="border-left: 1px solid rgba(255, 255, 255, 0.1); height: 50px; align-self: center;"></div>
+<div>
+<div style="font-size: 1.8em; font-weight: bold; color: #26d9a4;">Oversampled</div>
+<div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Dataset Balance</div>
+</div>
+<div style="border-left: 1px solid rgba(255, 255, 255, 0.1); height: 50px; align-self: center;"></div>
+<div>
+<div style="font-size: 1.8em; font-weight: bold; color: #ff9f1c;">Naive Bayes</div>
+<div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Classifier Model</div>
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
+
+elif menu == "1. Data Loading & Visualization":
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.subheader("Data & Feature Engineering Code")
+        st.code("""
+# Handling imbalanced dataset using Oversampling
+only_spam = dataset[dataset["label"] == 1]
+count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])
+for i in range(0, count-1):
+	dataset = pd.concat([dataset, only_spam])
+
+# Count Plot
+plt.figure(figsize=(8,8))
+sns.countplot(x="label", data = dataset)
+plt.title('Countplot for Spam vs Ham as balanced dataset')
+        """, language="python")
+    with col2:
+        st.subheader("Data Visualizations")
+        fig, ax = plt.subplots(figsize=(6, 4))
+        sns.countplot(x="label", data=dataset, ax=ax)
+        ax.set_title("Balanced Spam vs Ham")
+        st.pyplot(fig)
+        
+        st.write("First 5 rows of dataset:")
+        st.dataframe(dataset.head(5))
+    render_explain_button("loading_vis", "This page inspects and <span class='tech-hover-container'><span class='glow-tech'>balances the dataset</span><span class='tech-tooltip-box'><strong>Dataset Balancing</strong>The process of adjusting class ratios to prevent machine learning algorithms from developing a prediction bias towards the majority class.</span></span>. Since raw categories have skewness, we duplicate the <span class='tech-hover-container'><span class='glow-tech'>minority class</span><span class='tech-tooltip-box'><strong>Minority Class</strong>The class that is underrepresented in the dataset (in this case, 'spam'), which is oversampled to reach parity with the majority class.</span></span>. It also performs <span class='tech-hover-container'><span class='glow-tech'>feature engineering</span><span class='tech-tooltip-box'><strong>Feature Engineering</strong>The process of creating new predictive feature variables (like word count, currency symbols, or numbers) from raw input text to help the classification model.</span></span> to extract custom indicators.")
+
+
+elif menu == "2. Model Training & Evaluation":
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.subheader("Naive Bayes Training Code")
+        st.code("""
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import classification_report, confusion_matrix
+
+mnb = MultinomialNB()
+mnb.fit(X_train, y_train)
+y_pred = mnb.predict(X_test)
+
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(data=cm, annot=True, fmt='g')
+        """, language="python")
+    with col2:
+        st.subheader("Model Evaluation")
+        cm = confusion_matrix(y_test, y_pred)
+        fig, ax = plt.subplots(figsize=(6, 5))
+        sns.heatmap(data=cm, xticklabels=["ham", "spam"], yticklabels=["ham", "spam"], annot=True, fmt='g', cmap="Blues", ax=ax)
+        ax.set_title("Confusion Matrix (Multinomial NB)")
+        ax.set_xlabel("Predicted values")
+        ax.set_ylabel("Actual Labels")
+        st.pyplot(fig)
+    render_explain_button("model_eval", "This page evaluates the <span class='tech-hover-container'><span class='glow-tech'>Multinomial Naive Bayes</span><span class='tech-tooltip-box'><strong>Multinomial Naive Bayes</strong>A probabilistic classification model based on Bayes' Theorem, particularly suited for text classification using discrete word counts.</span></span> model. It presents fitting code and plots a <span class='tech-hover-container'><span class='glow-tech'>Seaborn confusion matrix</span><span class='tech-tooltip-box'><strong>Seaborn Confusion Matrix</strong>A visual heatmap grid displaying predicted classes against true classes to inspect model classification errors.</span></span> using conditional probabilities derived from <span class='tech-hover-container'><span class='glow-tech'>Bayes' Theorem</span><span class='tech-tooltip-box'><strong>Bayes' Theorem</strong>A mathematical formula that calculates posterior probability based on prior probabilities and likelihood conditions.</span></span>.")
+
+
+elif menu == "3. Live Prediction Test":
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.subheader("Prediction Code")
+        st.code("""
+def predict_spam(sms):
+	message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=sms).lower()
+	words = message.split()
+	filtered_words = [word for word in words if word not in stopwords.words('english')]
+	lemm_words = [wnl.lemmatize(word) for word in filtered_words]
+	message = ' '.join(lemm_words)
+	temp = tfidf.transform([message]).toarray()
+	return mnb.predict(pd.DataFrame(temp, columns=feature_names))
+        """, language="python")
+    with col2:
+        st.subheader("Live Test")
+        user_input = st.text_area("Enter an SMS message to test:", "IMPORTANT - You can be entitled up to $3160 from sis-sold PPI on a credit card or loan, Please check.")
+        if st.button("Predict"):
+            wnl = WordNetLemmatizer()
+            stop_words = set(stopwords.words('english'))
+            message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=user_input).lower()
+            words = message.split()
+            filtered_words = [word for word in words if word not in stop_words]
+            lemm_words = [wnl.lemmatize(word) for word in filtered_words]
+            message = ' '.join(lemm_words)
+            temp = tfidf.transform([message]).toarray()
+            prediction = mnb.predict(pd.DataFrame(temp, columns=feature_names))[0]
+            
+            if prediction == 1:
+                st.error("🚨 This is a SPAM message.")
+            else:
+                st.success("✅ This is a HAM (normal) message.")
+    render_explain_button("live_pred", "This page hosts a live classification box. You can input custom text messages. The text is processed through <span class='tech-hover-container'><span class='glow-tech'>TF-IDF</span><span class='tech-tooltip-box'><strong>TF-IDF</strong>Term Frequency-Inverse Document Frequency: a numerical statistic that reflects how important a word is to a document in a corpus.</span></span>, using precalculated training <span class='tech-hover-container'><span class='glow-tech'>inference values</span><span class='tech-tooltip-box'><strong>Inference Values</strong>Calculated numeric weight scalars generated during runtime testing using scaling weights from the training dataset.</span></span> to get the category <span class='tech-hover-container'><span class='glow-tech'>predicted instantly</span><span class='tech-tooltip-box'><strong>Instant Inference</strong>The real-time model inference phase where a pre-trained model processes new features to generate class classifications instantly.</span></span>.")
+
+
+elif menu == "4. Full Code Explorer":
+    if 'spam_active_block' not in st.session_state:
+        st.session_state.spam_active_block = None
+
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.subheader("Interactive Code Explorer")
+        
+        st.markdown("### Block 1: Imports & Loading")
+        st.code('''import numpy as np 
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+dataset = pd.read_csv("SMSSpamCollection", sep='\\t', names=['label', 'message'])
+dataset['label'] = dataset['label'].map({'ham':0 ,'spam':1})''', language="python")
+        if st.button("▶ Run Block 1"):
+            st.session_state.spam_active_block = "block1"
+            
+        st.markdown("### Block 2: Visualizing Imbalance")
+        st.code('''plt.figure(figsize=(8,8))
+g = sns.countplot(x="label", data = dataset)
+p = plt.title('Countplot for Spam vs Ham as imbalanced dataset')
+p = plt.xlabel('Is the SMS Spam?')
+p = plt.ylabel('Count')''', language="python")
+        if st.button("▶ Run Block 2"):
+            st.session_state.spam_active_block = "block2"
+
+        st.markdown("### Block 3: Handling Imbalance")
+        st.code('''only_spam = dataset[dataset["label"] == 1]
+count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])
+for i in range(0, count-1):
+    dataset = pd.concat([dataset, only_spam])
+
+plt.figure(figsize=(8,8))
+g = sns.countplot(x="label", data = dataset)
+p = plt.title('Countplot for Spam vs Ham as balanced dataset')''', language="python")
+        if st.button("▶ Run Block 3"):
+            st.session_state.spam_active_block = "block3"
+            
+        st.markdown("### Block 4: Word Count Distribution")
+        st.code('''dataset['word_count'] = dataset['message'].apply(lambda x: len(x.split()))
+plt.figure(figsize=(12,6))
+plt.subplot(1,2,1)
+g = sns.histplot(dataset[dataset["label"] == 0].word_count, kde = True)
+p = plt.title('Distribution of word_count for Ham SMS')
+plt.subplot(1,2,2)
+g = sns.histplot(dataset[dataset["label"] == 1].word_count, color = "red", kde = True)
+p = plt.title('Distribution of word_count for Spam SMS')''', language="python")
+        if st.button("▶ Run Block 4"):
+            st.session_state.spam_active_block = "block4"
+            
+        st.markdown("### Block 5: Currency & Numbers Features")
+        st.code('''def currency(data):
+    currency_symbols = ['$','€','₹','¥','₺']
+    for i in currency_symbols:
+        if i in data: return 1
+    return 0
+dataset["contains_currency_symbols"] = dataset["message"].apply(currency)
+
+def number(data):
+    for i in data:
+        if ord(i) >= 48 and ord(i) <= 57: return 1
+    return 0
+dataset["contains_number"] = dataset['message'].apply(number)''', language="python")
+        if st.button("▶ Run Block 5"):
+            st.session_state.spam_active_block = "block5"
+            
+        st.markdown("### Block 6: Data Cleaning & TF-IDF")
+        st.code('''import nltk
+import re
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+corpus = []
+wnl = WordNetLemmatizer()
+for sms in list(dataset.message):
+    message = re.sub(pattern='[^a-zA-Z]', repl = ' ', string = sms)
+    message = message.lower()
+    words = message.split()
+    filtered_words = [word for word in words if word not in set(stopwords.words('english'))]
+    lemm_words = [wnl.lemmatize(word) for word in filtered_words]
+    message = ' '.join(lemm_words)
+    corpus.append(message)
+
+tfidf = TfidfVectorizer(max_features = 500)
+vectors = tfidf.fit_transform(corpus).toarray()
+feature_names = tfidf.get_feature_names_out()
+X = pd.DataFrame(vectors, columns = feature_names)
+y = dataset['label']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state = 42)''', language="python")
+        if st.button("▶ Run Block 6"):
+            st.session_state.spam_active_block = "block6"
+            
+        st.markdown("### Block 7: Naive Bayes Model")
+        st.code('''from sklearn.naive_bayes import MultinomialNB
+mnb = MultinomialNB()
+mnb.fit(X_train, y_train)
+y_pred = mnb.predict(X_test)
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(data=cm, annot=True, fmt='g', cmap="Blues")''', language="python")
+        if st.button("▶ Run Block 7"):
+            st.session_state.spam_active_block = "block7"
+            
+        st.markdown("### Block 8: Decision Tree Model")
+        st.code('''from sklearn.tree import DecisionTreeClassifier
+dt = DecisionTreeClassifier()
+dt.fit(X_train, y_train)
+y_pred1 = dt.predict(X_test)
+cm = confusion_matrix(y_test, y_pred1)
+sns.heatmap(data=cm, annot=True, fmt='g', cmap="Blues")''', language="python")
+        if st.button("▶ Run Block 8"):
+            st.session_state.spam_active_block = "block8"
+            
+        st.markdown("### Block 9: Example Predictions")
+        st.code('''sample_message = "Sam, your rent payment for June 2022 has been recieved."
+if predict_spam(sample_message):
+    print('This is a SPAM message.')
+else:
+    print('This is a HAM(normal) message.')''', language="python")
+        if st.button("▶ Run Block 9"):
+            st.session_state.spam_active_block = "block9"
+
+    with col2:
+        st.subheader("Dynamic Output")
+        if st.session_state.spam_active_block is None:
+            st.info("👈 Click a 'Run' button on the left to see the output here!")
+        else:
+            phase_map = {
+                "block1": "Data Loading",
+                "block2": "Imbalance Analysis",
+                "block3": "Data Balancing",
+                "block4": "Word Statistics",
+                "block5": "Feature Engineering",
+                "block6": "Text Vectorization",
+                "block7": "Naive Bayes Evaluation",
+                "block8": "Decision Tree Evaluation",
+                "block9": "Prediction Testing"
+            }
+            progress_map = {
+                "block1": 0.12,
+                "block2": 0.22,
+                "block3": 0.34,
+                "block4": 0.46,
+                "block5": 0.58,
+                "block6": 0.72,
+                "block7": 0.84,
+                "block8": 0.92,
+                "block9": 1.00
+            }
+            active_block = st.session_state.spam_active_block
+
+            with st.expander("Run Progress & Output", expanded=True):
+                phase = phase_map.get(active_block, "Processing")
+                progress_value = progress_map.get(active_block, 0.0)
+                st.progress(progress_value, text=f"Phase: {phase} ({int(progress_value * 100)}%)")
+
+                if active_block == "block1":
+                    st.dataframe(dataset[['label', 'message']].head())
+                    st.write("Null Values count:")
+                    st.text(dataset.isnull().sum())
+                    show_explanation("Imports NumPy, Pandas, Matplotlib, and Seaborn. It loads the `SMSSpamCollection` dataset, names the columns `label` and `message`, and maps standard classifications to binary formats (`ham` -> 0, `spam` -> 1).")
+                elif active_block == "block2":
+                    raw = pd.read_csv("SMSSpamCollection", sep='\\t', names=['label', 'message'])
+                    fig, ax = plt.subplots(figsize=(6, 4))
+                    sns.countplot(x="label", data=raw, ax=ax)
+                    ax.set_title("Imbalanced Spam vs Ham")
+                    st.pyplot(fig)
+                    show_explanation("Visualizes the class distribution using a Seaborn count plot. It reveals a highly imbalanced dataset where the majority of text messages are classified as normal (ham), with a much smaller portion being spam.")
+                elif active_block == "block3":
+                    fig, ax = plt.subplots(figsize=(6, 4))
+                    sns.countplot(x="label", data=dataset, ax=ax)
+                    ax.set_title("Balanced Spam vs Ham")
+                    st.pyplot(fig)
+                    show_explanation("Resolves the dataset imbalance. It extracts all spam records, computes an oversampling ratio, and duplicates the spam entries to balance the dataset. A balanced distribution is plotted.", technique="**Oversampling:** A data augmentation technique that repeats minority class samples to balance target representation and prevent classifier bias.")
+                elif active_block == "block4":
+                    dataset_wc = dataset.copy()
+                    dataset_wc['word_count'] = dataset_wc['message'].apply(lambda x: len(x.split()))
+                    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10,4))
+                    sns.histplot(dataset_wc[dataset_wc["label"] == 0].word_count, kde=True, ax=ax1)
+                    ax1.set_title("Ham Word Count")
+                    sns.histplot(dataset_wc[dataset_wc["label"] == 1].word_count, kde=True, color="red", ax=ax2)
+                    ax2.set_title("Spam Word Count")
+                    st.pyplot(fig)
+                    show_explanation("Analyzes text message lengths by calculating and displaying the distribution of word count for normal messages vs. spam messages. It shows that spam messages tend to be longer.")
+                elif active_block == "block5":
+                    def currency(data):
+                        for i in ['$','€','₹','¥','₺']:
+                            if i in data: return 1
+                        return 0
+                    def number(data):
+                        for i in data:
+                            if ord(i) >= 48 and ord(i) <= 57: return 1
+                        return 0
+                    
+                    temp_df = dataset.copy()
+                    temp_df["contains_currency_symbols"] = temp_df["message"].apply(currency)
+                    temp_df["contains_number"] = temp_df['message'].apply(number)
+                    
+                    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+                    sns.countplot(x='contains_currency_symbols', data=temp_df, hue='label', ax=ax1)
+                    ax1.set_title("Currency Symbols (0=No, 1=Yes)")
+                    sns.countplot(x='contains_number', data=temp_df, hue="label", ax=ax2)
+                    ax2.set_title("Numbers (0=No, 1=Yes)")
+                    st.pyplot(fig)
+                    show_explanation("Extracts custom features. It creates boolean fields checking if the message contains currency symbols ($, €, etc.) or numerical digits. It plots counts to show these features correlate highly with spam.", technique="**Feature Engineering:** Creating domain-specific indicators (presence of digits and currency characters) to act as strong classification helpers.")
+                elif active_block == "block6":
+                    st.success("Corpus cleaned, Lemmatized, and TF-IDF created!")
+                    st.write(f"TF-IDF Vectors Shape: {X.shape}")
+                    st.write("Preview of TF-IDF DataFrame:")
+                    st.dataframe(X.head())
+                    show_explanation("Cleans and tokenizes the texts. It strips out non-alphabetic characters, lowercases the strings, filters English stopwords, lemmatizes terms using `WordNetLemmatizer`, and fits a `TfidfVectorizer` (500 features).", technique="**WordNetLemmatizer:** A dictionary-based lookup tool that returns the true grammatical base root (lemma) of a word based on part-of-speech context.\n\n**TF-IDF Vectorizer:** A term weighting technique that values terms inversely to their occurrence rates across the corpus, diminishing common structural words.")
+                elif active_block == "block7":
+                    cm = confusion_matrix(y_test, y_pred)
+                    fig, ax = plt.subplots(figsize=(6, 5))
+                    sns.heatmap(data=cm, xticklabels=["ham", "spam"], yticklabels=["ham", "spam"], annot=True, fmt='g', cmap="Blues", ax=ax)
+                    ax.set_title("Naive Bayes Confusion Matrix")
+                    st.pyplot(fig)
+                    show_explanation("Fits a Multinomial Naive Bayes classifier on the vectorized train set, predicts test records, and plots a Seaborn heatmap confusion matrix showing actual versus predicted classifications.", technique="**Multinomial Naive Bayes Classifier:** A classification model that calculates probabilities using Bayes' Theorem, ideal for frequency-based word patterns.")
+                elif active_block == "block8":
+                    from sklearn.tree import DecisionTreeClassifier
+                    dt = DecisionTreeClassifier()
+                    dt.fit(X_train, y_train)
+                    y_pred1 = dt.predict(X_test)
+                    cm_dt = confusion_matrix(y_test, y_pred1)
+                    fig, ax = plt.subplots(figsize=(6, 5))
+                    sns.heatmap(data=cm_dt, xticklabels=["ham", "spam"], yticklabels=["ham", "spam"], annot=True, fmt='g', cmap="Greens", ax=ax)
+                    ax.set_title("Decision Tree Confusion Matrix")
+                    st.pyplot(fig)
+                    show_explanation("Trains an alternative model using a `DecisionTreeClassifier` as a comparison, runs prediction on the test set, and visualizes its performance with a confusion matrix heatmap.", technique="**Decision Tree Classifier:** A flow-chart-like split logic model that segments instances by optimizing mathematical metrics like Gini impurity or Entropy.")
+                elif active_block == "block9":
+                    sample1 = "IMPORTANT - You can be entitled up to $3160 from sis-sold PPI on a credit card or loan, Please check."
+                    sample2 = "Come to think of it, I have never got a spam message before."
+                    
+                    def test_msg(msg):
+                        import re
+                        from nltk.corpus import stopwords
+                        from nltk.stem import WordNetLemmatizer
+                        wnl = WordNetLemmatizer()
+                        m = re.sub(pattern='[^a-zA-Z]', repl=' ', string=msg).lower()
+                        words = [wnl.lemmatize(w) for w in m.split() if w not in set(stopwords.words('english'))]
+                        m = ' '.join(words)
+                        temp = tfidf.transform([m]).toarray()
+                        pred = mnb.predict(pd.DataFrame(temp, columns=feature_names))[0]
+                        return "🚨 SPAM" if pred == 1 else "✅ HAM"
+                        
+                    st.write(f"**Test 1:** {sample1}")
+                    st.write(f"**Prediction:** {test_msg(sample1)}")
+                    st.write("---")
+                    st.write(f"**Test 2:** {sample2}")
+                    st.write(f"**Prediction:** {test_msg(sample2)}")
+                    show_explanation("Evaluates the final classifier on raw spam and ham sample messages. It applies the processing functions, transforms them using TF-IDF, and queries the Naive Bayes model to output the classifications.", technique="**Inference Pipeline Execution:** Passing raw text inputs through the exact fitted training pipelines (Lemmatization, TF-IDF transform, Naive Bayes predict) to ensure consistency.")
+
+elif menu == "5. View Raw Source Code":
+    st.subheader("Raw Source Code (Doc2Spam.py)")
+    st.info("Here is the complete, original source code for this project.")
+    try:
+        with open("Doc2Spam.py", "r", encoding="utf-8") as f:
+            st.code(f.read(), language="python")
+    except FileNotFoundError:
+        try:
+            with open("../Doc2Spam.py", "r", encoding="utf-8") as f:
+                st.code(f.read(), language="python")
+        except FileNotFoundError:
+            st.error("Original code file not found.")
+    render_explain_button("raw_source", "This page shows the original <span class='tech-hover-container'><span class='glow-tech'>raw python code</span><span class='tech-tooltip-box'><strong>Raw Python Code</strong>The underlying computer script files compiled in Python that execute data cleaning and fit predictive classification structures.</span></span>, highlighting the exact <span class='tech-hover-container'><span class='glow-tech'>data processing</span><span class='tech-tooltip-box'><strong>Data Processing</strong>The collection of operational procedures that parse, scrub, and map raw records into analytical structures.</span></span> and balancing steps executed outside of this interactive <span class='tech-hover-container'><span class='glow-tech'>Streamlit dashboard</span><span class='tech-tooltip-box'><strong>Streamlit Dashboard</strong>The interactive graphical user interface framework that converts data scripts into real-time web consoles.</span></span>.")

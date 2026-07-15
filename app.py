@@ -441,6 +441,60 @@ st.markdown("""
         letter-spacing: 0.5px !important;
     }
 
+    /* --- MOBILE RESPONSIVENESS --- */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding: 1rem 0.5rem !important;
+        }
+        
+        .premium-hero {
+            margin: -20px 0 15px 0 !important;
+            padding: 15px 12px !important;
+        }
+
+        .premium-hero h1 {
+            font-size: 1.5rem !important;
+        }
+        
+        div[data-testid="stMarkdownContainer"] h2 {
+            font-size: 1.25em !important;
+        }
+        
+        div[data-testid="stMarkdownContainer"] h3 {
+            font-size: 1.1em !important;
+        }
+
+        .stButton > button {
+            width: 100% !important;
+            padding: 0.6rem 1rem !important;
+        }
+
+        [data-testid="column"] {
+            padding: 14px !important;
+            margin-bottom: 12px !important;
+        }
+        
+        .tech-tooltip-box {
+            width: 260px;
+        }
+        
+        /* Stack the pipeline workflow numbers and text */
+        div[style*="gap: 16px"] {
+            gap: 12px !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+        
+        /* Fix the Metrics Ribbon for smaller screens */
+        div[style*="justify-content: space-around"] {
+            flex-direction: column !important;
+            gap: 16px !important;
+        }
+        
+        div[style*="border-left: 1px solid"] {
+            display: none !important;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 

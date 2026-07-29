@@ -7,8 +7,9 @@
 import numpy as np 
 import pandas as pd
 
-#Importing Dataset
-dataset = pd.read_csv("SMSSpamCollection", sep='\t', names=['label', 'message'])
+import os
+data_path = "../data/SMSSpamCollection" if os.path.exists("../data/SMSSpamCollection") else ("data/SMSSpamCollection" if os.path.exists("data/SMSSpamCollection") else "SMSSpamCollection")
+dataset = pd.read_csv(data_path, sep='\t', names=['label', 'message'])
 dataset
 dataset.info()
 dataset.describe()

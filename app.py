@@ -524,7 +524,9 @@ menu = st.sidebar.radio("Go to", ["Project Overview", "1. Data Loading & Visuali
 
 @st.cache_resource
 def load_and_preprocess_data():
-    dataset = pd.read_csv("SMSSpamCollection", sep='\t', names=['label', 'message'])
+    import os
+    data_path = "data/SMSSpamCollection" if os.path.exists("data/SMSSpamCollection") else "SMSSpamCollection"
+    dataset = pd.read_csv(data_path, sep='\t', names=['label', 'message'])
     dataset['label'] = dataset['label'].map({'ham':0 ,'spam':1})
     
     # Handle Imbalance
@@ -802,7 +804,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-dataset = pd.read_csv("SMSSpamCollection", sep='\\t', names=['label', 'message'])
+dataset = pd.read_csv("data/SMSSpamCollection", sep='\\t', names=['label', 'message'])
 dataset['label'] = dataset['label'].map({'ham':0 ,'spam':1})''', language="python")
         if st.button("▶ Run Block 1"):
             st.session_state.spam_active_block = "block1"
@@ -952,7 +954,9 @@ else:
                     st.text(dataset.isnull().sum())
                     show_explanation("Imports NumPy, Pandas, Matplotlib, and Seaborn. It loads the `SMSSpamCollection` dataset, names the columns `label` and `message`, and maps standard classifications to binary formats (`ham` -> 0, `spam` -> 1).")
                 elif active_block == "block2":
-                    raw = pd.read_csv("SMSSpamCollection", sep='\\t', names=['label', 'message'])
+                    import os
+                    data_path = "data/SMSSpamCollection" if os.path.exists("data/SMSSpamCollection") else "SMSSpamCollection"
+                    raw = pd.read_csv(data_path, sep='\\t', names=['label', 'message'])
                     fig, ax = plt.subplots(figsize=(6, 4))
                     sns.countplot(x="label", data=raw, ax=ax)
                     ax.set_title("Imbalanced Spam vs Ham")

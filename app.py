@@ -1050,11 +1050,11 @@ elif menu == "5. View Raw Source Code":
     st.subheader("Raw Source Code (Doc2Spam.py)")
     st.info("Here is the complete, original source code for this project.")
     try:
-        with open("Doc2Spam.py", "r", encoding="utf-8") as f:
+        with open("scripts/Doc2Spam.py", "r", encoding="utf-8") as f:
             st.code(f.read(), language="python")
     except FileNotFoundError:
         try:
-            with open("../Doc2Spam.py", "r", encoding="utf-8") as f:
+            with open("Doc2Spam.py", "r", encoding="utf-8") as f:
                 st.code(f.read(), language="python")
         except FileNotFoundError:
             st.error("Original code file not found.")

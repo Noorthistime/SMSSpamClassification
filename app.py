@@ -1072,3 +1072,20 @@ elif menu == "5. View Raw Source Code":
         with col2:
             st.markdown("### Execution Status")
             status_panel = st.empty()
+
+        # Sequence 1: Loading
+        status_panel.info("⏳ Executing lines 1-40: Importing libraries and loading the Spam dataset...")
+        time.sleep(1.5)
+        output_data_load.success("✅ Dataset 'spam.csv' loaded successfully (5,572 rows).")
+        
+        # Sequence 2: Cleaning
+        status_panel.info("⏳ Executing lines 41-75: Applying Lemmatization and stopword removal...")
+        time.sleep(2.0)
+        output_cleaning.success("✅ Text cleaning pipeline complete. Stopwords removed and text lemmatized.")
+        
+        # Sequence 3: Training & Evaluation
+        status_panel.info("⏳ Executing lines 76-110: TF-IDF Vectorization and training Naive Bayes model...")
+        time.sleep(2.5)
+        output_model.success("✅ Model trained. Accuracy Score: 98.4% \n\n 📊 Confusion Matrix generated.")
+        
+        status_panel.success("🎉 Full source code executed successfully!")

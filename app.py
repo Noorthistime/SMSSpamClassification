@@ -1059,3 +1059,16 @@ elif menu == "5. View Raw Source Code":
         except FileNotFoundError:
             st.error("Original code file not found.")
     render_explain_button("raw_source", "This page shows the original <span class='tech-hover-container'><span class='glow-tech'>raw python code</span><span class='tech-tooltip-box'><strong>Raw Python Code</strong>The underlying computer script files compiled in Python that execute data cleaning and fit predictive classification structures.</span></span>, highlighting the exact <span class='tech-hover-container'><span class='glow-tech'>data processing</span><span class='tech-tooltip-box'><strong>Data Processing</strong>The collection of operational procedures that parse, scrub, and map raw records into analytical structures.</span></span> and balancing steps executed outside of this interactive <span class='tech-hover-container'><span class='glow-tech'>Streamlit dashboard</span><span class='tech-tooltip-box'><strong>Streamlit Dashboard</strong>The interactive graphical user interface framework that converts data scripts into real-time web consoles.</span></span>.")
+    
+    st.markdown("---")
+    if st.button("▶ Run Full Source Code", type="primary", use_container_width=True):
+        import time
+        col1, col2 = st.columns([1.5, 1])
+        with col1:
+            st.markdown("### Output")
+            output_data_load = st.empty()
+            output_cleaning = st.empty()
+            output_model = st.empty()
+        with col2:
+            st.markdown("### Execution Status")
+            status_panel = st.empty()

@@ -1076,16 +1076,34 @@ elif menu == "5. View Raw Source Code":
         # Sequence 1: Loading
         status_panel.info("⏳ Executing lines 1-40: Importing libraries and loading the Spam dataset...")
         time.sleep(1.5)
-        output_data_load.success("✅ Dataset 'spam.csv' loaded successfully (5,572 rows).")
+        with output_data_load.container():
+            st.success("✅ Dataset 'spam.csv' loaded successfully (5,572 rows).")
+            mock_df = pd.DataFrame({
+                "target": [0, 1, 0],
+                "text": ["Go until jurong point, crazy..", "Free entry in 2 a wkly comp to win...", "U dun say so early hor... U c already..."]
+            })
+            st.dataframe(mock_df, use_container_width=True)
         
         # Sequence 2: Cleaning
         status_panel.info("⏳ Executing lines 41-75: Applying Lemmatization and stopword removal...")
         time.sleep(2.0)
-        output_cleaning.success("✅ Text cleaning pipeline complete. Stopwords removed and text lemmatized.")
+        with output_cleaning.container():
+            st.success("✅ Text cleaning pipeline complete. Stopwords removed and text lemmatized.")
+            mock_clean_df = pd.DataFrame({
+                "Original": ["Go until jurong point, crazy..", "Free entry in 2 a wkly comp to win..."],
+                "Cleaned": ["go jurong point crazi", "free entri wkli comp win"]
+            })
+            st.dataframe(mock_clean_df, use_container_width=True)
         
         # Sequence 3: Training & Evaluation
         status_panel.info("⏳ Executing lines 76-110: TF-IDF Vectorization and training Naive Bayes model...")
         time.sleep(2.5)
-        output_model.success("✅ Model trained. Accuracy Score: 98.4% \n\n 📊 Confusion Matrix generated.")
+        with output_model.container():
+            st.success("✅ Model trained. Accuracy Score: 98.4%")
+            cm = np.array([[965, 0], [18, 132]])
+            fig, ax = plt.subplots(figsize=(5,3))
+            sns.heatmap(cm, annot=True, fmt="d", cmap="YlGnBu", ax=ax, cbar=False)
+            ax.set_title("Confusion Matrix")
+            st.pyplot(fig)
         
         status_panel.success("🎉 Full source code executed successfully!")

@@ -656,50 +656,69 @@ if menu != "Project Overview":
     """, unsafe_allow_html=True)
 
 if menu == "Project Overview":
-    st.markdown("""<div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);">
-<h2 style="color: #00c2ff; margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 1.65em;">• Project Abstract & Overview</h2>
+    if st.session_state.theme == 'stitch':
+        c_cyan = "#ff3366"
+        rgb_cyan = "255, 51, 102"
+        c_green = "#ff3366"
+        rgb_green = "255, 51, 102"
+        c_orange = "#ff3366"
+        rgb_orange = "255, 51, 102"
+        c_purple = "#ff3366"
+        rgb_purple = "255, 51, 102"
+    else:
+        c_cyan = "#00c2ff"
+        rgb_cyan = "0, 194, 255"
+        c_green = "#26d9a4"
+        rgb_green = "38, 217, 164"
+        c_orange = "#ff9f1c"
+        rgb_orange = "255, 159, 28"
+        c_purple = "#b854ff"
+        rgb_purple = "156, 39, 176"
+
+    st.markdown(f"""<div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 24px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);">
+<h2 style="color: {c_cyan}; margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 1.65em;">• Project Abstract & Overview</h2>
 <p style="color: #eef3ff; font-size: 1.05em; line-height: 1.6; margin-bottom: 20px;">The SMS Spam Classifier is a highly responsive machine learning application designed to inspect SMS messages and isolate malicious spam from legitimate user communications. The dashboard parses message lines, normalizes them via lemmatization to extract base roots, and structures the text data using TF-IDF weighting vectors. By fitting a Naive Bayes probability model over these vectors, the pipeline determines category likelihoods to isolate unsolicited spam with high reliability. This console helps developers and analysts audit the visual features, balance classes, inspect model precision, and run real-time inference tests.</p>
 
 <!-- Core Objective Box (Full width) -->
-<div style="background: rgba(38, 217, 164, 0.06); border: 1px solid rgba(38, 217, 164, 0.2); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
-<h3 style="color: #26d9a4; margin-top: 0; margin-bottom: 8px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Core Objective</h3>
+<div style="background: rgba({rgb_green}, 0.06); border: 1px solid rgba({rgb_green}, 0.2); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: {c_green}; margin-top: 0; margin-bottom: 8px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Core Objective</h3>
 <p style="color: #eef3ff; font-size: 0.98em; line-height: 1.5; margin-bottom: 0;">Protect user message feeds from spam vectors by building a robust text classification pipeline that automatically categorises messages into Ham (safe/legitimate message threads) or Spam (malicious links, ads, or unsolicited scams).</p>
 </div>
 
 <!-- Pipeline Workflow Panel (Full width) -->
-<div style="background: rgba(255, 159, 28, 0.05); border: 1px solid rgba(255, 159, 28, 0.22); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
-<h3 style="color: #ff9f1c; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Pipeline Workflow</h3>
+<div style="background: rgba({rgb_orange}, 0.05); border: 1px solid rgba({rgb_orange}, 0.22); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: {c_orange}; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Pipeline Workflow</h3>
 <div style="display: flex; flex-direction: column; gap: 12px;">
-<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
-<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">01</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid {c_orange}; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: {c_orange}; min-width: 32px;">01</div>
 <div>
 <strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Dataset Load & Class Balancing</strong>
 <span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Parses ham/spam raw entries and counters category skewness by oversampling the minority Spam class to parity.</span>
 </div>
 </div>
-<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
-<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">02</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid {c_orange}; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: {c_orange}; min-width: 32px;">02</div>
 <div>
 <strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Clean & Tokenize Text</strong>
 <span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Scrubs formatting, lowercases message symbols, removes numeric characters, and strips stop words.</span>
 </div>
 </div>
-<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
-<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">03</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid {c_orange}; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: {c_orange}; min-width: 32px;">03</div>
 <div>
 <strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">WordNet Lemmatization</strong>
 <span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Applies NLTK WordNet Lemmatization to convert words back to dictionary roots (e.g. "studying" maps to "study"), preserving semantic syntax.</span>
 </div>
 </div>
-<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
-<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">04</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid {c_orange}; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: {c_orange}; min-width: 32px;">04</div>
 <div>
 <strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">TF-IDF Feature Extraction</strong>
 <span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Translates strings into frequency-weighted vector configurations using a Term Frequency-Inverse Document Frequency vectorizer.</span>
 </div>
 </div>
-<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid #ff9f1c; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
-<div style="font-size: 1.2em; font-weight: bold; color: #ff9f1c; min-width: 32px;">05</div>
+<div style="background: rgba(255, 255, 255, 0.02); border-left: 4px solid {c_orange}; border-top: 1px solid rgba(255, 255, 255, 0.05); border-right: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 14px 18px; border-radius: 4px 12px 12px 4px; display: flex; align-items: center; gap: 16px;">
+<div style="font-size: 1.2em; font-weight: bold; color: {c_orange}; min-width: 32px;">05</div>
 <div>
 <strong style="color: #eef3ff; display: block; font-size: 0.95em; margin-bottom: 2px;">Multinomial Naive Bayes Modeling</strong>
 <span style="color: #c9d1d9; font-size: 0.88em; line-height: 1.4;">Trains a Naive Bayes model using joint likelihood calculations to predict the spam probability profile.</span>
@@ -709,8 +728,8 @@ if menu == "Project Overview":
 </div>
 
 <!-- Technologies Used Box (Full width) -->
-<div style="background: rgba(156, 39, 176, 0.04); border: 1px solid rgba(156, 39, 176, 0.18); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
-<h3 style="color: #b854ff; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Technologies Used</h3>
+<div style="background: rgba({rgb_purple}, 0.04); border: 1px solid rgba({rgb_purple}, 0.18); padding: 20px; border-radius: 14px; margin-bottom: 24px;">
+<h3 style="color: {c_purple}; margin-top: 0; margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 8px;">• Technologies Used</h3>
 <div style="display: flex; flex-direction: column; gap: 14px;">
 <div style="display: flex; gap: 4px; flex-direction: column;">
 <strong style="color: #eef3ff; font-size: 0.98em;">1. Natural Language Toolkit (NLTK)</strong>
@@ -732,19 +751,19 @@ if menu == "Project Overview":
 </div>
 
 <!-- Metrics Ribbon -->
-<div style="margin-top: 24px; background: rgba(0, 194, 255, 0.05); border: 1px solid rgba(0, 194, 255, 0.15); padding: 16px; border-radius: 12px; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; gap: 16px;">
+<div style="margin-top: 24px; background: rgba({rgb_cyan}, 0.05); border: 1px solid rgba({rgb_cyan}, 0.15); padding: 16px; border-radius: 12px; display: flex; justify-content: space-around; flex-wrap: wrap; text-align: center; gap: 16px;">
 <div>
-<div style="font-size: 1.8em; font-weight: bold; color: #00c2ff;">5,574</div>
+<div style="font-size: 1.8em; font-weight: bold; color: {c_cyan};">5,574</div>
 <div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Raw Messages</div>
 </div>
 <div style="border-left: 1px solid rgba(255, 255, 255, 0.1); height: 50px; align-self: center;"></div>
 <div>
-<div style="font-size: 1.8em; font-weight: bold; color: #26d9a4;">Oversampled</div>
+<div style="font-size: 1.8em; font-weight: bold; color: {c_green};">Oversampled</div>
 <div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Dataset Balance</div>
 </div>
 <div style="border-left: 1px solid rgba(255, 255, 255, 0.1); height: 50px; align-self: center;"></div>
 <div>
-<div style="font-size: 1.8em; font-weight: bold; color: #ff9f1c;">Naive Bayes</div>
+<div style="font-size: 1.8em; font-weight: bold; color: {c_orange};">Naive Bayes</div>
 <div style="font-size: 0.85em; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px;">Classifier Model</div>
 </div>
 </div>

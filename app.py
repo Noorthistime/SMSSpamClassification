@@ -613,11 +613,38 @@ def train_model():
 
 tfidf, feature_names, mnb, X, X_train, y_train, X_test, y_test, y_pred = train_model()
 
+st.markdown('<div id="hero-scroll-marker" style="position: absolute; top: -10px;"></div>', unsafe_allow_html=True)
+
 st.markdown("""
 <div class="premium-hero">
     <h1>SMS Spam Classification</h1>
 </div>
 """, unsafe_allow_html=True)
+
+
+components.html("""
+<script>
+    const parentDoc = window.parent.document;
+    const marker = parentDoc.getElementById('hero-scroll-marker');
+    const heroes = parentDoc.querySelectorAll('.premium-hero');
+
+    if (marker && heroes.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                heroes.forEach(hero => {
+                    if (!entry.isIntersecting) {
+                        hero.classList.add('pill-mode');
+                    } else {
+                        hero.classList.remove('pill-mode');
+                    }
+                });
+            });
+        }, { root: null, threshold: 0 });
+        
+        observer.observe(marker);
+    }
+</script>
+""", height=0, width=0)
 
 if menu != "Project Overview":
     st.markdown(f"""

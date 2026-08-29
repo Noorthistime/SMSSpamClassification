@@ -1899,8 +1899,12 @@ Here is the complete, original source code for this project.
             st.success("✅ Model trained. Accuracy Score: 98.4%")
             cm = np.array([[965, 0], [18, 132]])
             fig, ax = plt.subplots(figsize=(5,3))
-            sns.heatmap(cm, annot=True, fmt="d", cmap="YlGnBu", ax=ax, cbar=False)
-            ax.set_title("Confusion Matrix")
+            fig.patch.set_alpha(0.0)
+            ax.set_facecolor('none')
+            cmap = "Reds_r" if st.session_state.theme == 'stitch' else "Blues_r"
+            sns.heatmap(cm, annot=True, fmt="d", cmap=cmap, ax=ax, cbar=False)
+            ax.set_title("Confusion Matrix", color="white")
+            ax.tick_params(colors="white")
             st.pyplot(fig)
         
         status_panel.success("🎉 Full source code executed successfully!")

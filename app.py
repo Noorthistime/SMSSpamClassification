@@ -29,11 +29,11 @@ st.set_page_config(page_title="SMS Spam Classification", layout="wide")
 if 'theme' not in st.session_state:
     st.session_state.theme = 'default'
 
-# Theme Toggle UI
-col1, col2 = st.columns([10, 1])
-with col2:
-    is_stitch = st.toggle("Crimson Theme", value=(st.session_state.theme == 'stitch'))
-    st.session_state.theme = 'stitch' if is_stitch else 'default'
+# Hidden Toggle Button
+is_stitch = st.button("HIDDEN_TOGGLE_DO_NOT_CLICK", key="hidden_theme_btn")
+if is_stitch:
+    st.session_state.theme = 'stitch' if st.session_state.theme == 'default' else 'default'
+    st.rerun()
 
 if st.session_state.theme == 'default':
     st.markdown("""
@@ -1482,3 +1482,42 @@ elif menu == "5. View Raw Source Code":
             st.pyplot(fig)
         
         status_panel.success("🎉 Full source code executed successfully!")
+
+
+import streamlit.components.v1 as components
+
+components.html('''
+<script>
+    const parent = window.parent.document;
+    
+    // 1. Find the hidden button by its text
+    const buttons = parent.querySelectorAll('button');
+    let hiddenBtn = null;
+    buttons.forEach(b => {
+        if (b.innerText.includes("HIDDEN_TOGGLE_DO_NOT_CLICK")) {
+            hiddenBtn = b;
+        }
+    });
+
+    if (hiddenBtn) {
+        // 2. Hide the button container completely
+        const container = hiddenBtn.closest('.element-container');
+        if (container) {
+            container.style.position = 'absolute';
+            container.style.opacity = '0';
+            container.style.pointerEvents = 'none';
+            container.style.width = '0px';
+            container.style.height = '0px';
+            container.style.display = 'none'; 
+        }
+
+        // 3. Attach click listener to premium-hero
+        const heroes = parent.querySelectorAll('.premium-hero');
+        heroes.forEach(hero => {
+            hero.addEventListener('click', () => {
+                hiddenBtn.click();
+            });
+        });
+    }
+</script>
+''', height=0)

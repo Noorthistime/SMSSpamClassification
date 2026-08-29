@@ -1454,7 +1454,7 @@ elif menu == "3. Live Prediction Test":
         st.markdown(f"""
         <div class="sentinel-terminal">
             <div class="sentinel-code-body">
-                <span class="keyword">def</span> predict_spam(sms):<br>&nbsp;message = re.sub(pattern='[^a-zA-Z]', repl=' ', string=sms).lower()<br>&nbsp;words = message.split()<br>&nbsp;filtered_words = [word <span class="keyword">for</span> word <span class="keyword">in</span> words <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> stopwords.words('english')]<br>&nbsp;lemm_words = [wnl.lemmatize(word) <span class="keyword">for</span> word <span class="keyword">in</span> filtered_words]<br>&nbsp;message = ' '.join(lemm_words)<br>&nbsp;temp = tfidf.transform([message]).toarray()<br>&nbsp;<span class="keyword">return</span> mnb.predict(pd.DataFrame(temp, columns=feature_names))
+                <span class="keyword">def</span> <span class="keyword">predict_spam</span>(sms):<br>&nbsp;&nbsp;&nbsp;&nbsp;message = re.<span class="keyword">sub</span>(pattern='[^a-zA-Z]', repl=' ', string=sms).<span class="keyword">lower</span>()<br>&nbsp;&nbsp;&nbsp;&nbsp;words = message.<span class="keyword">split</span>()<br>&nbsp;&nbsp;&nbsp;&nbsp;filtered_words = [word <span class="keyword">for</span> word <span class="keyword">in</span> words <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> stopwords.words('english')]<br>&nbsp;&nbsp;&nbsp;&nbsp;lemm_words = [wnl.<span class="keyword">lemmatize</span>(word) <span class="keyword">for</span> word <span class="keyword">in</span> filtered_words]<br>&nbsp;&nbsp;&nbsp;&nbsp;message = ' '.<span class="keyword">join</span>(lemm_words)<br>&nbsp;&nbsp;&nbsp;&nbsp;temp = tfidf.<span class="keyword">transform</span>([message]).<span class="keyword">toarray</span>()<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> mnb.<span class="keyword">predict</span>(pd.DataFrame(temp, columns=feature_names))
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -1463,7 +1463,8 @@ elif menu == "3. Live Prediction Test":
         st.markdown('<div class="sentinel-card-title">Live Test</div>', unsafe_allow_html=True)
         with st.container():
             st.markdown('<div class="metrics-container-hook"></div>', unsafe_allow_html=True)
-            user_input = st.text_area("Enter an SMS message to test:", "IMPORTANT - You can be entitled up to $3160 from sis-sold PPI on a credit card or loan, Please check.")
+            user_input = st.text_area("Enter an SMS message to test (Press Enter to predict):", "IMPORTANT - You can be entitled up to $3160 from sis-sold PPI on a credit card or loan, Please check.")
+            
             if st.button("Predict"):
                 wnl = WordNetLemmatizer()
                 stop_words = set(stopwords.words('english'))
@@ -1479,6 +1480,27 @@ elif menu == "3. Live Prediction Test":
                     st.error("🚨 This is a SPAM message.")
                 else:
                     st.success("✅ This is a HAM (normal) message.")
+                    
+            st.markdown("""
+            <script>
+                const parent = window.parent.document;
+                const textareas = parent.querySelectorAll('textarea');
+                textareas.forEach(ta => {
+                    if (!ta.dataset.enterBound) {
+                        ta.dataset.enterBound = 'true';
+                        ta.addEventListener('keydown', function(e) {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                const buttons = parent.querySelectorAll('button');
+                                buttons.forEach(b => {
+                                    if (b.innerText === 'Predict') b.click();
+                                });
+                            }
+                        });
+                    }
+                });
+            </script>
+            """, unsafe_allow_html=True)
                     
     render_explain_button("live_pred", "This page hosts a live classification box. You can input custom text messages. The text is processed through <span class='tech-hover-container'><span class='glow-tech'>TF-IDF</span><span class='tech-tooltip-box'><strong>TF-IDF</strong>Term Frequency-Inverse Document Frequency: a numerical statistic that reflects how important a word is to a document in a corpus.</span></span>, using precalculated training <span class='tech-hover-container'><span class='glow-tech'>inference values</span><span class='tech-tooltip-box'><strong>Inference Values</strong>Calculated numeric weight scalars generated during runtime testing using scaling weights from the training dataset.</span></span> to get the category <span class='tech-hover-container'><span class='glow-tech'>predicted instantly</span><span class='tech-tooltip-box'><strong>Instant Inference</strong>The real-time model inference phase where a pre-trained model processes new features to generate class classifications instantly.</span></span>.")
 

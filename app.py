@@ -157,6 +157,13 @@ if st.session_state.theme == 'default':
         text-shadow: 0 0 18px rgba(79, 70, 229, 0.28);
     }
 
+    div.element-container:has(.premium-hero),
+    div.stMarkdown:has(.premium-hero) {
+        position: sticky !important;
+        top: 15px !important;
+        z-index: 999 !important;
+    }
+
     .premium-hero {
         position: relative;
         margin: -45px 0 20px 0 !important;
@@ -167,8 +174,23 @@ if st.session_state.theme == 'default':
         backdrop-filter: blur(18px);
         box-shadow: 0 16px 38px rgba(4, 12, 34, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
         overflow: hidden;
-        transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+        transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         text-align: center;
+    }
+
+    .premium-hero.pill-mode {
+        width: 85% !important;
+        margin: 0 auto 20px auto !important;
+        padding: 12px 40px !important;
+        border-radius: 50px !important;
+        background: linear-gradient(130deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)) !important;
+        box-shadow: 0 10px 30px rgba(4, 12, 34, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+    }
+    
+    .premium-hero.pill-mode h1 {
+        font-size: 1.6rem !important;
     }
 
     .premium-hero::before {

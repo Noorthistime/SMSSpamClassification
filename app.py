@@ -513,6 +513,219 @@ if st.session_state.theme == 'default':
 </style>
 """, unsafe_allow_html=True)
 
+elif st.session_state.theme == 'stitch':
+    st.markdown("""
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 60, 100, 0.4);
+        --glass-shadow: 0 12px 36px rgba(40, 8, 15, 0.35);
+        --brand-1: #ff3366;
+        --brand-2: #8b0000;
+        --brand-3: #ff6633;
+    }
+
+    html, body, [class*="css"] {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .stApp {
+        background:
+            radial-gradient(circle at 10% 12%, rgba(255, 51, 102, 0.18), transparent 34%),
+            radial-gradient(circle at 88% 20%, rgba(204, 0, 51, 0.18), transparent 40%),
+            radial-gradient(circle at 50% 86%, rgba(139, 0, 0, 0.2), transparent 45%),
+            linear-gradient(145deg, #1a0808 0%, #2a0b12 46%, #120306 100%);
+        background-attachment: fixed;
+        color: #ffeeee;
+    }
+    
+    [data-testid="stSidebar"] {
+        background: rgba(26, 8, 8, 0.6) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border-right: 1px solid var(--glass-border) !important;
+        box-shadow: 4px 0 24px rgba(255, 51, 102, 0.1) !important;
+    }
+
+    [data-testid="stHeader"] {
+        background: transparent !important;
+    }
+
+    .stButton > button {
+        background: linear-gradient(135deg, rgba(255,51,102,0.1) 0%, rgba(204,0,51,0.1) 100%) !important;
+        border: 1px solid rgba(255,51,102,0.4) !important;
+        color: #ff3366 !important;
+        border-radius: 12px !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        padding: 12px 24px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        box-shadow: 0 4px 12px rgba(255,51,102,0.1) !important;
+        width: 100%;
+    }
+
+    .stButton > button:hover {
+        background: linear-gradient(135deg, #ff3366 0%, #cc0033 100%) !important;
+        border-color: #ff3366 !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255,51,102,0.25) !important;
+    }
+
+    div[data-testid="stMarkdownContainer"] h1 {
+        font-weight: 800;
+        background: linear-gradient(to right, #ff3366, #ff80a0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 30px;
+    }
+
+    div[data-testid="stMarkdownContainer"] h2, h3 {
+        color: #ff3366 !important;
+        font-weight: 700;
+    }
+
+    /* Style the radio items as beautiful horizontal tabs/buttons */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-top: 10px;
+    }
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        padding: 12px 16px !important;
+        border-radius: 12px !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 0px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+        background: rgba(255, 51, 102, 0.08) !important;
+        border-color: rgba(255, 51, 102, 0.4) !important;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(255, 51, 102, 0.15);
+    }
+
+    /* Style for checked state */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, rgba(255, 51, 102, 0.22), rgba(139, 0, 0, 0.24)) !important;
+        border-color: rgba(255, 51, 102, 0.7) !important;
+        box-shadow: 0 0 15px rgba(255, 51, 102, 0.25), inset 0 0 8px rgba(255, 51, 102, 0.15);
+    }
+
+    /* Restore the radio bullet circle and make it red when active */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
+        margin-right: 8px;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"] > div:first-child div {
+        background-color: #ff3366 !important;
+    }
+
+    /* Hide redundant radio widget label */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > label {
+        display: none !important;
+    }
+
+    /* Typography fixes for sidebar header — always dark theme */
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: #f5f9ff !important;
+        font-weight: 700;
+        text-shadow: 0 0 12px rgba(255, 51, 102, 0.35);
+        margin-bottom: 12px !important;
+    }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label div[data-testid="stMarkdownContainer"] p {
+        color: #f5f9ff !important;
+    }
+
+    /* Keep the active red highlight in both modes */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"] *,
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) * {
+        color: #ff3366 !important;
+        font-weight: 600 !important;
+    }
+
+    div.element-container:has(.premium-hero),
+    div.stMarkdown:has(.premium-hero) {
+        position: sticky !important;
+        top: 15px !important;
+        z-index: 999 !important;
+    }
+
+    .premium-hero {
+        position: relative;
+        width: 100%;
+        margin: -45px auto 20px auto !important;
+        padding: 20px 24px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: linear-gradient(130deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+        backdrop-filter: blur(18px);
+        box-shadow: 0 16px 38px rgba(40, 8, 15, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+        overflow: hidden;
+        transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        text-align: center;
+    }
+
+    .premium-hero.pill-mode {
+        width: 85% !important;
+        margin: 0 auto 20px auto !important;
+        padding: 12px 40px !important;
+        border-radius: 50px !important;
+        background: linear-gradient(130deg, rgba(255, 51, 102, 0.15), rgba(255, 51, 102, 0.05)) !important;
+        box-shadow: 0 10px 30px rgba(40, 8, 15, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+    }
+    
+    .premium-hero.pill-mode h1 {
+        font-size: 1.6rem !important;
+    }
+
+    .premium-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        background-size: 220% 100%;
+        animation: shimmer 6.5s linear infinite;
+        pointer-events: none;
+    }
+
+    .premium-hero:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255, 51, 102, 0.78);
+        box-shadow: 0 0 30px rgba(255, 51, 102, 0.35), 0 18px 42px rgba(40, 8, 15, 0.5);
+    }
+
+    .premium-hero h1 {
+        margin: 0 !important;
+        font-size: clamp(1.45rem, 2.4vw, 2.2rem);
+        font-weight: 800;
+        color: #f5f9ff !important;
+        background: none !important;
+        -webkit-text-fill-color: #f5f9ff !important;
+        letter-spacing: 0.35px;
+        text-shadow: 0 0 16px rgba(255, 51, 102, 0.45);
+        position: relative;
+        z-index: 1;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 def show_explanation(text, technique=None):
     if st.session_state.theme == 'stitch':
         bg, border, text_color = "rgba(255, 51, 102, 0.12)", "#ff3366", "#ff3366"

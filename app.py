@@ -25,6 +25,33 @@ except LookupError:
 
 st.set_page_config(page_title="SMS Spam Classification", layout="wide")
 
+def get_hl_code(code_str):
+    import re
+    keywords = {'import', 'from', 'if', 'else', 'elif', 'for', 'while', 'def', 'class', 'return', 'and', 'or', 'not', 'in', 'is', 'try', 'except', 'with', 'as', 'pass', 'break', 'continue'}
+    builtins = {'print', 'len', 'range', 'int', 'float', 'str', 'list', 'dict', 'set', 'tuple', 'bool', 'True', 'False', 'None'}
+    methods = {'read_csv', 'map', 'copy', 'lower', 'sub', 'escape', 'split', 'join', 'stem', 'apply', 'fit', 'predict', 'transform', 'fit_transform', 'toarray', 'concat', 'lemmatize', 'DataFrame', 'subplots', 'heatmap', 'countplot', 'head', 'shape', 'drop', 'fillna', 'astype', 'isnull', 'sum', 'sort_values'}
+    
+    hl_lines = []
+    lines = code_str.strip('\n').split('\n')
+    for line in lines:
+        leading_whitespace = len(line) - len(line.lstrip())
+        words = re.split(r'(\W+)', line.lstrip())
+        
+        hl_words = []
+        for w in words:
+            if w in keywords:
+                hl_words.append(f'<span class="keyword">{w}</span>')
+            elif w in builtins or w in methods:
+                hl_words.append(f'<span class="builtin">{w}</span>')
+            else:
+                hl_words.append(w)
+                
+        hl_line = ('&nbsp;' * leading_whitespace) + ''.join(hl_words)
+        if not line.strip():
+            hl_line = '&nbsp;'
+        hl_lines.append(hl_line)
+    return '<br>'.join(hl_lines)
+
 
 if 'theme' not in st.session_state:
     st.session_state.theme = 'default'
@@ -1237,7 +1264,7 @@ if menu != "Project Overview":
         <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 18px; border-radius: 30px; color: #8a99ad; font-size: 0.85em; font-weight: 500; letter-spacing: 0.5px; display: inline-block; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
             {menu}
         </span>
-    </div>
+</div>
     """, unsafe_allow_html=True)
 
 if menu == "Project Overview":
@@ -1618,15 +1645,15 @@ elif menu == "4. Full Code Explorer":
             is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
             brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
             st.markdown(f"""
-            <div style="background: rgba({brand_color}, 0.15); 
+<div style="background: rgba({brand_color}, 0.15); 
                         border: 1px solid rgba({brand_color}, 0.4); 
                         padding: 16px 20px; 
                         border-radius: 14px; 
                         color: #fff; 
                         font-weight: 500;
                         box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                👈 Click a <b>'Run'</b> button on the left to see the output here!
-            </div>
+👈 Click a <b>'Run'</b> button on the left to see the output here!
+</div>
             """, unsafe_allow_html=True)
         else:
             phase_map = {
@@ -1758,14 +1785,38 @@ elif menu == "4. Full Code Explorer":
 
 elif menu == "5. View Raw Source Code":
     st.subheader("Raw Source Code (Doc2Spam.py)")
-    st.info("Here is the complete, original source code for this project.")
+    is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
+
+    brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
+
+    st.markdown(f"""
+
+<div style="background: rgba({brand_color}, 0.15); border: 1px solid rgba({brand_color}, 0.4); padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
+
+Here is the complete, original source code for this project.
+
+</div>
+
+    """, unsafe_allow_html=True)
     try:
         with open("scripts/Doc2Spam.py", "r", encoding="utf-8") as f:
-            st.code(f.read(), language="python")
+            raw_code = f.read()
+
+            hl_code = get_hl_code(raw_code)
+
+            html_str = '''<div class="sentinel-terminal"><div class="sentinel-code-body">''' + hl_code + '''</div></div>'''
+
+            st.markdown(html_str, unsafe_allow_html=True)
     except FileNotFoundError:
         try:
             with open("Doc2Spam.py", "r", encoding="utf-8") as f:
-                st.code(f.read(), language="python")
+                raw_code = f.read()
+
+                hl_code = get_hl_code(raw_code)
+
+                html_str = '''<div class="sentinel-terminal"><div class="sentinel-code-body">''' + hl_code + '''</div></div>'''
+
+                st.markdown(html_str, unsafe_allow_html=True)
         except FileNotFoundError:
             st.error("Original code file not found.")
     render_explain_button("raw_source", "This page shows the original <span class='tech-hover-container'><span class='glow-tech'>raw python code</span><span class='tech-tooltip-box'><strong>Raw Python Code</strong>The underlying computer script files compiled in Python that execute data cleaning and fit predictive classification structures.</span></span>, highlighting the exact <span class='tech-hover-container'><span class='glow-tech'>data processing</span><span class='tech-tooltip-box'><strong>Data Processing</strong>The collection of operational procedures that parse, scrub, and map raw records into analytical structures.</span></span> and balancing steps executed outside of this interactive <span class='tech-hover-container'><span class='glow-tech'>Streamlit dashboard</span><span class='tech-tooltip-box'><strong>Streamlit Dashboard</strong>The interactive graphical user interface framework that converts data scripts into real-time web consoles.</span></span>.")
@@ -1784,7 +1835,19 @@ elif menu == "5. View Raw Source Code":
             status_panel = st.empty()
 
         # Sequence 1: Loading
-        status_panel.info("⏳ Executing lines 1-40: Importing libraries and loading the Spam dataset...")
+        is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
+
+        brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
+
+        status_panel.markdown(f"""
+
+<div style="background: rgba({brand_color}, 0.15); border: 1px solid rgba({brand_color}, 0.4); padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
+
+⏳ Executing lines 1-40: Importing libraries and loading the Spam dataset...
+
+</div>
+
+        """, unsafe_allow_html=True)
         time.sleep(1.5)
         with output_data_load.container():
             st.success("✅ Dataset 'spam.csv' loaded successfully (5,572 rows).")
@@ -1795,7 +1858,19 @@ elif menu == "5. View Raw Source Code":
             st.dataframe(mock_df, use_container_width=True)
         
         # Sequence 2: Cleaning
-        status_panel.info("⏳ Executing lines 41-75: Applying Lemmatization and stopword removal...")
+        is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
+
+        brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
+
+        status_panel.markdown(f"""
+
+<div style="background: rgba({brand_color}, 0.15); border: 1px solid rgba({brand_color}, 0.4); padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
+
+⏳ Executing lines 41-75: Applying Lemmatization and stopword removal...
+
+</div>
+
+        """, unsafe_allow_html=True)
         time.sleep(2.0)
         with output_cleaning.container():
             st.success("✅ Text cleaning pipeline complete. Stopwords removed and text lemmatized.")
@@ -1806,7 +1881,19 @@ elif menu == "5. View Raw Source Code":
             st.dataframe(mock_clean_df, use_container_width=True)
         
         # Sequence 3: Training & Evaluation
-        status_panel.info("⏳ Executing lines 76-110: TF-IDF Vectorization and training Naive Bayes model...")
+        is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
+
+        brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
+
+        status_panel.markdown(f"""
+
+<div style="background: rgba({brand_color}, 0.15); border: 1px solid rgba({brand_color}, 0.4); padding: 12px 18px; border-radius: 12px; color: #fff; font-weight: 500; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 15px;">
+
+⏳ Executing lines 76-110: TF-IDF Vectorization and training Naive Bayes model...
+
+</div>
+
+        """, unsafe_allow_html=True)
         time.sleep(2.5)
         with output_model.container():
             st.success("✅ Model trained. Accuracy Score: 98.4%")

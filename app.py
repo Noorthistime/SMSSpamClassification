@@ -1514,118 +1514,101 @@ elif menu == "4. Full Code Explorer":
         st.subheader("Interactive Code Explorer")
         
         st.markdown("### Block 1: Imports & Loading")
-        st.code('''import numpy as np 
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-dataset = pd.read_csv("data/SMSSpamCollection", sep='\\t', names=['label', 'message'])
-dataset['label'] = dataset['label'].map({'ham':0 ,'spam':1})''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                <span class="keyword">import</span> numpy <span class="keyword">as</span> np <br><span class="keyword">import</span> pandas <span class="keyword">as</span> pd<br><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt<br><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns<br>&nbsp;<br>dataset = pd.<span class="builtin">read_csv</span>("data/SMSSpamCollection", sep='\\t', names=['label', 'message'])<br>dataset['label'] = dataset['label'].<span class="builtin">map</span>({'ham':0 ,'spam':1})
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 1"):
             st.session_state.spam_active_block = "block1"
             
         st.markdown("### Block 2: Visualizing Imbalance")
-        st.code('''plt.figure(figsize=(8,8))
-g = sns.countplot(x="label", data = dataset)
-p = plt.title('Countplot for Spam vs Ham as imbalanced dataset')
-p = plt.xlabel('Is the SMS Spam?')
-p = plt.ylabel('Count')''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                plt.figure(figsize=(8,8))<br>g = sns.<span class="builtin">countplot</span>(x="label", data = dataset)<br>p = plt.title('Countplot <span class="keyword">for</span> Spam vs Ham <span class="keyword">as</span> imbalanced dataset')<br>p = plt.xlabel('Is the SMS Spam?')<br>p = plt.ylabel('Count')
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 2"):
             st.session_state.spam_active_block = "block2"
 
         st.markdown("### Block 3: Handling Imbalance")
-        st.code('''only_spam = dataset[dataset["label"] == 1]
-count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])
-for i in range(0, count-1):
-    dataset = pd.concat([dataset, only_spam])
-
-plt.figure(figsize=(8,8))
-g = sns.countplot(x="label", data = dataset)
-p = plt.title('Countplot for Spam vs Ham as balanced dataset')''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                only_spam = dataset[dataset["label"] == 1]<br>count = <span class="builtin">int</span>((dataset.<span class="builtin">shape</span>[0] - only_spam.<span class="builtin">shape</span>[0]) / only_spam.<span class="builtin">shape</span>[0])<br><span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(0, count-1):<br>&nbsp;&nbsp;&nbsp;&nbsp;dataset = pd.<span class="builtin">concat</span>([dataset, only_spam])<br>&nbsp;<br>plt.figure(figsize=(8,8))<br>g = sns.<span class="builtin">countplot</span>(x="label", data = dataset)<br>p = plt.title('Countplot <span class="keyword">for</span> Spam vs Ham <span class="keyword">as</span> balanced dataset')
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 3"):
             st.session_state.spam_active_block = "block3"
             
         st.markdown("### Block 4: Word Count Distribution")
-        st.code('''dataset['word_count'] = dataset['message'].apply(lambda x: len(x.split()))
-plt.figure(figsize=(12,6))
-plt.subplot(1,2,1)
-g = sns.histplot(dataset[dataset["label"] == 0].word_count, kde = True)
-p = plt.title('Distribution of word_count for Ham SMS')
-plt.subplot(1,2,2)
-g = sns.histplot(dataset[dataset["label"] == 1].word_count, color = "red", kde = True)
-p = plt.title('Distribution of word_count for Spam SMS')''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                dataset['word_count'] = dataset['message'].<span class="builtin">apply</span>(lambda x: <span class="builtin">len</span>(x.<span class="builtin">split</span>()))<br>plt.figure(figsize=(12,6))<br>plt.subplot(1,2,1)<br>g = sns.histplot(dataset[dataset["label"] == 0].word_count, kde = <span class="builtin">True</span>)<br>p = plt.title('Distribution of word_count <span class="keyword">for</span> Ham SMS')<br>plt.subplot(1,2,2)<br>g = sns.histplot(dataset[dataset["label"] == 1].word_count, color = "red", kde = <span class="builtin">True</span>)<br>p = plt.title('Distribution of word_count <span class="keyword">for</span> Spam SMS')
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 4"):
             st.session_state.spam_active_block = "block4"
             
         st.markdown("### Block 5: Currency & Numbers Features")
-        st.code('''def currency(data):
-    currency_symbols = ['$','€','₹','¥','₺']
-    for i in currency_symbols:
-        if i in data: return 1
-    return 0
-dataset["contains_currency_symbols"] = dataset["message"].apply(currency)
-
-def number(data):
-    for i in data:
-        if ord(i) >= 48 and ord(i) <= 57: return 1
-    return 0
-dataset["contains_number"] = dataset['message'].apply(number)''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                <span class="keyword">def</span> currency(data):<br>&nbsp;&nbsp;&nbsp;&nbsp;currency_symbols = ['$','€','₹','¥','₺']<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> i <span class="keyword">in</span> currency_symbols:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> i <span class="keyword">in</span> data: <span class="keyword">return</span> 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> 0<br>dataset["contains_currency_symbols"] = dataset["message"].<span class="builtin">apply</span>(currency)<br>&nbsp;<br><span class="keyword">def</span> number(data):<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> i <span class="keyword">in</span> data:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span> ord(i) >= 48 <span class="keyword">and</span> ord(i) <= 57: <span class="keyword">return</span> 1<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> 0<br>dataset["contains_number"] = dataset['message'].<span class="builtin">apply</span>(number)
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 5"):
             st.session_state.spam_active_block = "block5"
             
         st.markdown("### Block 6: Data Cleaning & TF-IDF")
-        st.code('''import nltk
-import re
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-
-corpus = []
-wnl = WordNetLemmatizer()
-for sms in list(dataset.message):
-    message = re.sub(pattern='[^a-zA-Z]', repl = ' ', string = sms)
-    message = message.lower()
-    words = message.split()
-    filtered_words = [word for word in words if word not in set(stopwords.words('english'))]
-    lemm_words = [wnl.lemmatize(word) for word in filtered_words]
-    message = ' '.join(lemm_words)
-    corpus.append(message)
-
-tfidf = TfidfVectorizer(max_features = 500)
-vectors = tfidf.fit_transform(corpus).toarray()
-feature_names = tfidf.get_feature_names_out()
-X = pd.DataFrame(vectors, columns = feature_names)
-y = dataset['label']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state = 42)''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                <span class="keyword">import</span> nltk<br><span class="keyword">import</span> re<br><span class="keyword">from</span> nltk.corpus <span class="keyword">import</span> stopwords<br><span class="keyword">from</span> nltk.<span class="builtin">stem</span> <span class="keyword">import</span> WordNetLemmatizer<br><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer<br>&nbsp;<br>corpus = []<br>wnl = WordNetLemmatizer()<br><span class="keyword">for</span> sms <span class="keyword">in</span> <span class="builtin">list</span>(dataset.message):<br>&nbsp;&nbsp;&nbsp;&nbsp;message = re.<span class="builtin">sub</span>(pattern='[^a-zA-Z]', repl = ' ', string = sms)<br>&nbsp;&nbsp;&nbsp;&nbsp;message = message.<span class="builtin">lower</span>()<br>&nbsp;&nbsp;&nbsp;&nbsp;words = message.<span class="builtin">split</span>()<br>&nbsp;&nbsp;&nbsp;&nbsp;filtered_words = [word <span class="keyword">for</span> word <span class="keyword">in</span> words <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> <span class="builtin">set</span>(stopwords.words('english'))]<br>&nbsp;&nbsp;&nbsp;&nbsp;lemm_words = [wnl.<span class="builtin">lemmatize</span>(word) <span class="keyword">for</span> word <span class="keyword">in</span> filtered_words]<br>&nbsp;&nbsp;&nbsp;&nbsp;message = ' '.<span class="builtin">join</span>(lemm_words)<br>&nbsp;&nbsp;&nbsp;&nbsp;corpus.append(message)<br>&nbsp;<br>tfidf = TfidfVectorizer(max_features = 500)<br>vectors = tfidf.<span class="builtin">fit_transform</span>(corpus).<span class="builtin">toarray</span>()<br>feature_names = tfidf.get_feature_names_out()<br>X = pd.<span class="builtin">DataFrame</span>(vectors, columns = feature_names)<br>y = dataset['label']<br>X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state = 42)
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 6"):
             st.session_state.spam_active_block = "block6"
             
         st.markdown("### Block 7: Naive Bayes Model")
-        st.code('''from sklearn.naive_bayes import MultinomialNB
-mnb = MultinomialNB()
-mnb.fit(X_train, y_train)
-y_pred = mnb.predict(X_test)
-cm = confusion_matrix(y_test, y_pred)
-sns.heatmap(data=cm, annot=True, fmt='g', cmap="Blues")''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                <span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB<br>mnb = MultinomialNB()<br>mnb.<span class="builtin">fit</span>(X_train, y_train)<br>y_pred = mnb.<span class="builtin">predict</span>(X_test)<br>cm = confusion_matrix(y_test, y_pred)<br>sns.<span class="builtin">heatmap</span>(data=cm, annot=<span class="builtin">True</span>, fmt='g', cmap="Blues")
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 7"):
             st.session_state.spam_active_block = "block7"
             
         st.markdown("### Block 8: Decision Tree Model")
-        st.code('''from sklearn.tree import DecisionTreeClassifier
-dt = DecisionTreeClassifier()
-dt.fit(X_train, y_train)
-y_pred1 = dt.predict(X_test)
-cm = confusion_matrix(y_test, y_pred1)
-sns.heatmap(data=cm, annot=True, fmt='g', cmap="Blues")''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                <span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier<br>dt = DecisionTreeClassifier()<br>dt.<span class="builtin">fit</span>(X_train, y_train)<br>y_pred1 = dt.<span class="builtin">predict</span>(X_test)<br>cm = confusion_matrix(y_test, y_pred1)<br>sns.<span class="builtin">heatmap</span>(data=cm, annot=<span class="builtin">True</span>, fmt='g', cmap="Blues")
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 8"):
             st.session_state.spam_active_block = "block8"
             
         st.markdown("### Block 9: Example Predictions")
-        st.code('''sample_message = "Sam, your rent payment for June 2022 has been recieved."
-if predict_spam(sample_message):
-    print('This is a SPAM message.')
-else:
-    print('This is a HAM(normal) message.')''', language="python")
+        st.markdown('''
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                sample_message = "Sam, your rent payment <span class="keyword">for</span> June 2022 has been recieved."<br><span class="keyword">if</span> predict_spam(sample_message):<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="builtin">print</span>('This <span class="keyword">is</span> a SPAM message.')<br><span class="keyword">else</span>:<br>&nbsp;&nbsp;&nbsp;&nbsp;<span class="builtin">print</span>('This <span class="keyword">is</span> a HAM(normal) message.')
+            </div>
+        </div>
+        ''', unsafe_allow_html=True)
         if st.button("▶ Run Block 9"):
             st.session_state.spam_active_block = "block9"
 

@@ -166,7 +166,8 @@ if st.session_state.theme == 'default':
 
     .premium-hero {
         position: relative;
-        margin: -45px 0 20px 0 !important;
+        width: 100%;
+        margin: -45px auto 20px auto !important;
         padding: 20px 24px;
         border-radius: 18px;
         border: 1px solid rgba(255, 255, 255, 0.34);
@@ -193,15 +194,7 @@ if st.session_state.theme == 'default':
         font-size: 1.6rem !important;
     }
 
-    .premium-hero::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
-        background-size: 220% 100%;
-        animation: shimmer 6.5s linear infinite;
-        pointer-events: none;
-    }
+
 
     .premium-hero:hover {
         transform: translateY(-3px);

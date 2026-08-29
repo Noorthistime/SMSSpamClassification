@@ -1615,7 +1615,19 @@ elif menu == "4. Full Code Explorer":
     with col2:
         st.subheader("Dynamic Output")
         if st.session_state.spam_active_block is None:
-            st.info("👈 Click a 'Run' button on the left to see the output here!")
+            is_stitch_theme = st.session_state.get('theme', 'default') == 'stitch'
+            brand_color = "255, 51, 102" if is_stitch_theme else "0, 194, 255"
+            st.markdown(f"""
+            <div style="background: rgba({brand_color}, 0.15); 
+                        border: 1px solid rgba({brand_color}, 0.4); 
+                        padding: 16px 20px; 
+                        border-radius: 14px; 
+                        color: #fff; 
+                        font-weight: 500;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                👈 Click a <b>'Run'</b> button on the left to see the output here!
+            </div>
+            """, unsafe_allow_html=True)
         else:
             phase_map = {
                 "block1": "Data Loading",

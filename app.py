@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import numpy as np
 import pandas as pd
 import re
@@ -24,7 +25,18 @@ except LookupError:
 
 st.set_page_config(page_title="SMS Spam Classification", layout="wide")
 
-st.markdown("""
+
+if 'theme' not in st.session_state:
+    st.session_state.theme = 'default'
+
+# Theme Toggle UI
+col1, col2 = st.columns([10, 1])
+with col2:
+    is_stitch = st.toggle("Crimson Theme", value=(st.session_state.theme == 'stitch'))
+    st.session_state.theme = 'stitch' if is_stitch else 'default'
+
+if st.session_state.theme == 'default':
+    st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 

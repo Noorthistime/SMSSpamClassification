@@ -30,10 +30,10 @@ if 'theme' not in st.session_state:
     st.session_state.theme = 'default'
 
 # Hidden Toggle Button
+st.markdown('<div class="hide-next-button"></div>', unsafe_allow_html=True)
 is_stitch = st.button("HIDDEN_TOGGLE_DO_NOT_CLICK", key="hidden_theme_btn")
 if is_stitch:
     st.session_state.theme = 'stitch' if st.session_state.theme == 'default' else 'default'
-    st.rerun()
 
 if st.session_state.theme == 'default':
     st.markdown("""
@@ -525,6 +525,19 @@ if st.session_state.theme == 'default':
             display: none !important;
         }
     }
+
+    /* Instant zero-flash hiding of the theme toggle button */
+    div.element-container:has(.hide-next-button),
+    div.element-container:has(.hide-next-button) + div.element-container {
+        position: absolute !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -814,6 +827,19 @@ elif st.session_state.theme == 'stitch':
         .tech-hover-container:hover .tech-tooltip-box {
             transform: translateX(-50%) translateY(0);
         }
+    }
+
+    /* Instant zero-flash hiding of the theme toggle button */
+    div.element-container:has(.hide-next-button),
+    div.element-container:has(.hide-next-button) + div.element-container {
+        position: absolute !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 </style>
 """, unsafe_allow_html=True)

@@ -738,6 +738,83 @@ elif st.session_state.theme == 'stitch':
         position: relative;
         z-index: 1;
     }
+
+    .glow-tech {
+        color: #ff3366;
+        font-weight: 600;
+        cursor: help;
+        border-bottom: 1px dashed rgba(255, 51, 102, 0.5);
+        transition: all 0.2s ease;
+    }
+    
+    .glow-tech:hover {
+        color: #ff5577;
+        text-shadow: 0 0 12px rgba(255, 51, 102, 0.4);
+        border-bottom: 1px dashed rgba(255, 51, 102, 0.9);
+    }
+    
+    .tech-hover-container {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .tech-tooltip-box {
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: rgba(20, 5, 10, 0.95);
+        border: 1px solid rgba(255, 51, 102, 0.4);
+        padding: 12px 16px;
+        border-radius: 10px;
+        width: max-content;
+        max-width: 300px;
+        color: #c9d1d9;
+        font-size: 0.85em;
+        line-height: 1.5;
+        box-shadow: 0 8px 24px rgba(255, 51, 102, 0.15);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 1000;
+        pointer-events: none;
+    }
+    
+    .tech-tooltip-box strong {
+        color: #ff3366;
+        display: block;
+        font-size: 1.1em;
+        margin-bottom: 4px;
+    }
+
+    .tech-tooltip-box::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: rgba(255, 51, 102, 0.4) transparent transparent transparent;
+    }
+
+    .tech-hover-container:hover .tech-tooltip-box {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+    
+    @media (max-width: 768px) {
+        .tech-tooltip-box {
+            width: 240px;
+            font-size: 0.85em;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+        .tech-hover-container:hover .tech-tooltip-box {
+            transform: translateX(-50%) translateY(0);
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 

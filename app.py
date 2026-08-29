@@ -1358,28 +1358,43 @@ elif menu == "1. Data Loading & Visualization":
 
     col1, col2 = st.columns([1, 1])
     with col1:
-        st.subheader("Data & Feature Engineering Code")
-        st.code("""
-# Handling imbalanced dataset using Oversampling
-only_spam = dataset[dataset["label"] == 1]
-count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])
-for i in range(0, count-1):
-	dataset = pd.concat([dataset, only_spam])
-
-# Count Plot
-plt.figure(figsize=(8,8))
-sns.countplot(x="label", data = dataset)
-plt.title('Countplot for Spam vs Ham as balanced dataset')
-        """, language="python")
-    with col2:
-        st.subheader("Data Visualizations")
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.countplot(x="label", data=dataset, ax=ax)
-        ax.set_title("Balanced Spam vs Ham")
-        st.pyplot(fig)
+        st.markdown('<div class="sentinel-card-title">Feature Engineering Code</div>', unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="sentinel-terminal">
+            <div class="sentinel-code-body">
+                # Handling imbalanced dataset using Oversampling<br>only_spam = dataset[dataset["label"] == 1]<br>count = int((dataset.shape[0] - only_spam.shape[0]) / only_spam.shape[0])<br><span class="keyword">for</span> i <span class="keyword">in</span> range(0, count-1):<br>&nbsp;dataset = pd.concat([dataset, only_spam])<br>&nbsp;<br># Count Plot<br>plt.figure(figsize=(8,8))<br>sns.countplot(x="label", data = dataset)<br>plt.title('Countplot <span class="keyword">for</span> Spam vs Ham as balanced dataset')
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.write("First 5 rows of dataset:")
-        st.dataframe(dataset.head(5))
+    with col2:
+        st.markdown('<div class="sentinel-card-title">Data Visualizations</div>', unsafe_allow_html=True)
+        
+        with st.container():
+            st.markdown('<div class="metrics-container-hook"></div>', unsafe_allow_html=True)
+            
+            fig, ax = plt.subplots(figsize=(6, 4))
+            
+            is_stitch = st.session_state.get('theme', 'default') == 'stitch'
+            palette = "Reds_r" if is_stitch else "Blues_r"
+            
+            sns.countplot(x="label", data=dataset, ax=ax, palette=palette)
+            
+            fig.patch.set_alpha(0.0)
+            ax.set_facecolor('none')
+            for text in ax.texts: text.set_color("white")
+            ax.tick_params(colors='white')
+            ax.xaxis.label.set_color('white')
+            ax.yaxis.label.set_color('white')
+            
+            st.pyplot(fig)
+            
+            st.markdown(f"""
+            <div style="text-align: center; margin-top: 15px; padding-bottom: 10px;">
+                <h4 style="color:#fff; margin: 0; font-weight: 700; letter-spacing: 1px;">BALANCED SPAM VS HAM</h4>
+            </div>
+            """, unsafe_allow_html=True)
+            
     render_explain_button("loading_vis", "This page inspects and <span class='tech-hover-container'><span class='glow-tech'>balances the dataset</span><span class='tech-tooltip-box'><strong>Dataset Balancing</strong>The process of adjusting class ratios to prevent machine learning algorithms from developing a prediction bias towards the majority class.</span></span>. Since raw categories have skewness, we duplicate the <span class='tech-hover-container'><span class='glow-tech'>minority class</span><span class='tech-tooltip-box'><strong>Minority Class</strong>The class that is underrepresented in the dataset (in this case, 'spam'), which is oversampled to reach parity with the majority class.</span></span>. It also performs <span class='tech-hover-container'><span class='glow-tech'>feature engineering</span><span class='tech-tooltip-box'><strong>Feature Engineering</strong>The process of creating new predictive feature variables (like word count, currency symbols, or numbers) from raw input text to help the classification model.</span></span> to extract custom indicators.")
 
 

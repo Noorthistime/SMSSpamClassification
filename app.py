@@ -68,6 +68,7 @@ if st.session_state.theme == 'default':
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
     :root {
+        --primary-color: var(--brand-1);
         --glass-bg: rgba(255, 255, 255, 0.12);
         --glass-border: rgba(255, 255, 255, 0.32);
         --glass-shadow: 0 12px 36px rgba(8, 15, 40, 0.28);
@@ -364,12 +365,32 @@ if st.session_state.theme == 'default':
         font-weight: 600 !important;
     }
 
-    /* Restore the radio bullet circle and make it red when active */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
-        margin-right: 8px;
+    /* The Trojan Horse Strategy: Hide Streamlit's native dot container */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-of-type {
+        display: none !important;
     }
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"] > div:first-child div {
-        background-color: #ff4b4b !important;
+
+    /* Draw our custom empty circle */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label::before {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 12px;
+        margin-top: 2px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        background-color: transparent;
+        transition: all 0.2s ease-in-out;
+        flex-shrink: 0;
+    }
+
+    /* Draw our custom checked circle with the glowing theme color */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before {
+        border: 0px solid transparent !important;
+        background-color: #00c2ff !important;
+        background-image: radial-gradient(circle, #ffffff 30%, #00c2ff 35%);
+        box-shadow: 0 0 10px #00c2ff80;
     }
 
     /* Hide redundant radio widget label */
@@ -701,6 +722,7 @@ elif st.session_state.theme == 'stitch':
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
     :root {
+        --primary-color: var(--brand-1);
         --glass-bg: rgba(255, 255, 255, 0.05);
         --glass-border: rgba(255, 60, 100, 0.4);
         --glass-shadow: 0 12px 36px rgba(40, 8, 15, 0.35);
@@ -806,12 +828,32 @@ elif st.session_state.theme == 'stitch':
         box-shadow: 0 0 15px rgba(255, 51, 102, 0.25), inset 0 0 8px rgba(255, 51, 102, 0.15);
     }
 
-    /* Restore the radio bullet circle and make it red when active */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
-        margin-right: 8px;
+    /* The Trojan Horse Strategy: Hide Streamlit's native dot container */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-of-type {
+        display: none !important;
     }
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"] > div:first-child div {
+
+    /* Draw our custom empty circle */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label::before {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 12px;
+        margin-top: 2px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        background-color: transparent;
+        transition: all 0.2s ease-in-out;
+        flex-shrink: 0;
+    }
+
+    /* Draw our custom checked circle with the glowing theme color */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before {
+        border: 0px solid transparent !important;
         background-color: #ff3366 !important;
+        background-image: radial-gradient(circle, #ffffff 30%, #ff3366 35%);
+        box-shadow: 0 0 10px #ff336680;
     }
 
     /* Hide redundant radio widget label */

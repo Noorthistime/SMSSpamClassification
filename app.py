@@ -365,10 +365,19 @@ if st.session_state.theme == 'default':
         font-weight: 600 !important;
     }
 
-    /* The Trojan Horse Strategy: Hide Streamlit's native dot container */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:not([data-testid="stMarkdownContainer"]),
+    /* The Smart Sibling Strategy */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-of-type:not(:last-of-type),
     [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > svg {
         display: none !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label input[type="radio"] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
     }
 
     /* Draw our custom empty circle */
@@ -844,10 +853,19 @@ elif st.session_state.theme == 'stitch':
         box-shadow: 0 0 15px rgba(255, 51, 102, 0.25), inset 0 0 8px rgba(255, 51, 102, 0.15);
     }
 
-    /* The Trojan Horse Strategy: Hide Streamlit's native dot container */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:not([data-testid="stMarkdownContainer"]),
+    /* The Smart Sibling Strategy */
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-of-type:not(:last-of-type),
     [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label > svg {
         display: none !important;
+    }
+    
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label input[type="radio"] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
     }
 
     /* Draw our custom empty circle */

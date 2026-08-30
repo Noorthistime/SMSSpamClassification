@@ -787,9 +787,23 @@ elif st.session_state.theme == 'stitch':
         margin-bottom: 30px;
     }
 
-    div[data-testid="stMarkdownContainer"] h2, h3 {
+    /* Professional subheadings structure (Crimson) */
+    div[data-testid="stMarkdownContainer"] h2 {
         color: #ff3366 !important;
-        font-weight: 700;
+        font-weight: 600 !important;
+        font-size: 1.35em !important;
+        border-bottom: 2px solid rgba(255, 51, 102, 0.25) !important;
+        padding-bottom: 8px !important;
+        margin-top: 10px !important;
+        margin-bottom: 16px !important;
+        letter-spacing: 0.5px !important;
+    }
+    div[data-testid="stMarkdownContainer"] h3 {
+        color: #ff3366 !important;
+        font-weight: 500 !important;
+        font-size: 1.12em !important;
+        margin-top: 10px !important;
+        margin-bottom: 12px !important;
     }
 
     /* Style the radio items as beautiful horizontal tabs/buttons */
@@ -1695,6 +1709,8 @@ elif menu == "4. Full Code Explorer":
                         border-radius: 14px; 
                         color: #fff; 
                         font-weight: 500;
+                        font-size: 0.95em;
+                        line-height: 1.5;
                         box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
 👈 Click a <b>'Run'</b> button on the left to see the output here!
 </div>

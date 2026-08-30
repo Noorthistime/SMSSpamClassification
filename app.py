@@ -386,7 +386,8 @@ if st.session_state.theme == 'default':
     }
 
     /* Draw our custom checked circle with the glowing theme color */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before {
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked)::before {
         border: 0px solid transparent !important;
         background-color: #00c2ff !important;
         background-image: radial-gradient(circle, #ffffff 30%, #00c2ff 35%);
@@ -849,7 +850,8 @@ elif st.session_state.theme == 'stitch':
     }
 
     /* Draw our custom checked circle with the glowing theme color */
-    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before {
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"]::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked)::before {
         border: 0px solid transparent !important;
         background-color: #ff3366 !important;
         background-image: radial-gradient(circle, #ffffff 30%, #ff3366 35%);

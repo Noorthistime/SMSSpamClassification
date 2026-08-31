@@ -1359,7 +1359,7 @@ components.html("""
 </script>
 """, height=0, width=0)
 
-if menu != "Project Overview":
+if menu != "Project Overview" and menu != "Credits & Contact":
     st.markdown(f"""
     <div style="text-align: center; margin-top: -10px; margin-bottom: 25px;">
         <span style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 18px; border-radius: 30px; color: #8a99ad; font-size: 0.85em; font-weight: 500; letter-spacing: 0.5px; display: inline-block; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);">
@@ -2017,7 +2017,7 @@ Here is the complete, original source code for this project.
 elif menu == "Credits & Contact":
     st.markdown('''<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<div style="display: flex; flex-direction: column; width: 100%; min-height: 70vh; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: -20px;">
+<div style="display: flex; flex-direction: column; width: 100%; min-height: 70vh; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: -80px;">
     <!-- Central Premium Glass Card -->
     <div style="position: relative; z-index: 10; width: 100%; max-width: 42rem; background: var(--glass-bg); backdrop-filter: blur(24px); border-radius: 1rem; box-shadow: var(--glass-shadow); border: 1px solid var(--glass-border); padding: 3rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.5s ease-out;"
          onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">

@@ -2015,7 +2015,13 @@ Here is the complete, original source code for this project.
 
 
 elif menu == "Credits & Contact":
-    st.markdown('''<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    st.markdown('''<style>
+    /* Strict scrollbar lock for Credits page only */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+        overflow: hidden !important;
+    }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <div style="display: flex; flex-direction: column; width: 100%; min-height: auto; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: 0px;">
     <!-- Central Premium Glass Card -->

@@ -2098,16 +2098,28 @@ Here is the complete, original source code for this project.
 
 
 elif menu == "Contacts & Credit":
-    # Brutal JS immunization against pill-mode for Contacts page
-    components.html('''
-    <script>
-        // Because overflow: hidden breaks IntersectionObserver, we aggressively nuke pill-mode 20 times a second
-        setInterval(() => {
-            const heroes = window.parent.document.querySelectorAll('.premium-hero');
-            heroes.forEach(h => h.classList.remove('pill-mode'));
-        }, 50);
-    </script>
-    ''', height=0)
+
+    st.markdown('''
+<style>
+    /* Hide scrollbar visually to prevent freeze-trapping the scroll engine */
+    html::-webkit-scrollbar, body::-webkit-scrollbar, 
+    [data-testid="stAppViewContainer"]::-webkit-scrollbar, 
+    [data-testid="stMain"]::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+        -ms-overflow-style: none !important;
+        scrollbar-width: none !important;
+    }
+    /* Kill excess bottom spacing to prevent natural scrolling */
+    .main .block-container {
+        padding-bottom: 0rem !important;
+    }
+    footer { display: none !important; }
+</style>
+''', unsafe_allow_html=True)
     # Reset scroll position to fix pill-mode bug on short pages
     components.html('''
     <script>
@@ -2157,10 +2169,7 @@ elif menu == "Contacts & Credit":
         visibility: hidden !important;
         opacity: 0 !important;
     }
-    /* Strict scrollbar lock for Credits page only */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
-        overflow: hidden !important;
-    }
+    
     
     /* Pure CSS Hover Animation for Credits Buttons */
     .credits-btn {

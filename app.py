@@ -2017,17 +2017,17 @@ Here is the complete, original source code for this project.
 elif menu == "Credits & Contact":
     st.markdown('''<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<div style="display: flex; flex-direction: column; width: 100%; min-height: 70vh; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: -80px;">
+<div style="display: flex; flex-direction: column; width: 100%; min-height: auto; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: 0px;">
     <!-- Central Premium Glass Card -->
-    <div style="position: relative; z-index: 10; width: 100%; max-width: 42rem; background: var(--glass-bg); backdrop-filter: blur(24px); border-radius: 1rem; box-shadow: var(--glass-shadow); border: 1px solid var(--glass-border); padding: 3rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.5s ease-out;"
+    <div style="position: relative; z-index: 10; width: 100%; max-width: 42rem; background: var(--glass-bg); backdrop-filter: blur(24px); border-radius: 1rem; box-shadow: var(--glass-shadow); border: 1px solid var(--glass-border); padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.5s ease-out;"
          onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
         <!-- Liquid Highlight Top Edge -->
         <div style="position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); z-index: 20;"></div>
         <!-- Decorative Accent Line -->
         <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 8rem; height: 2px; background: linear-gradient(90deg, transparent, var(--brand-1), transparent); box-shadow: 0 0 10px var(--brand-1);"></div>
         <!-- Avatar -->
-        <div style="position: relative; margin-bottom: 2rem; cursor: pointer;">
-            <div style="position: relative; width: 8rem; height: 8rem; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, var(--brand-1), transparent); box-shadow: 0 0 20px rgba(0,0,0,0.4);">
+        <div style="position: relative; margin-bottom: 1rem; cursor: pointer;">
+            <div style="position: relative; width: 6rem; height: 6rem; border-radius: 50%; padding: 2px; background: linear-gradient(135deg, var(--brand-1), transparent); box-shadow: 0 0 20px rgba(0,0,0,0.4);">
                 <img src="https://lh3.googleusercontent.com/aida/AEtjO1V2hnv-yGyKWfgZqUzmTulGrawYSsDXwlrbs0dYx17g9zT5-UHXN-z7lwsbVvImWBvHpmO_QIpfft9LwZwWpOniAZjaC_-Myvvdq1gEozLOU2pAR0-zQbDkg0GmV7rZog3rqB9RLYF6CHa3pgJ4S-1sfHmHX1SbMa5KDEUGeE979urXrY8hOcTemCsrN0g1GWpLiaVghfqtjIuo01EFBgwDXbfXbKI-gLBEA45pJkNaCtR16pISXF3pSTVz" alt="Noor Mohammad" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; filter: grayscale(100%); transition: filter 0.7s;" onmouseover="this.style.filter='grayscale(0%)'" onmouseout="this.style.filter='grayscale(100%)'">
             </div>
             <!-- Status Badge -->
@@ -2036,12 +2036,12 @@ elif menu == "Credits & Contact":
             </div>
         </div>
         <!-- Typography Header -->
-        <div style="text-align: center; margin-bottom: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
             <h1 style="font-size: 3rem; color: #e6e0e9; margin: 0 0 0.5rem 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">Saiyed Noor <span style="color: var(--brand-1);">Mohammad</span></h1>
             <p style="font-size: 0.85rem; color: var(--brand-1); letter-spacing: 0.2em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin: 0; font-weight: 500;">Computer Engineering Student</p>
         </div>
         <!-- Interactive Buttons -->
-        <div style="display: flex; gap: 1.5rem; margin-bottom: 2.5rem; justify-content: center; width: 100%;">
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; justify-content: center; width: 100%;">
             <a href="https://github.com/Noorthistime" target="_blank" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.03); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; color: #cbc4d2;" onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.color='#cbc4d2';">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">code</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;">GitHub</span>
@@ -2052,7 +2052,7 @@ elif menu == "Credits & Contact":
             </a>
         </div>
         <!-- Divider -->
-        <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin-bottom: 2rem;"></div>
+        <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin-bottom: 1rem;"></div>
         <!-- Footer Info -->
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.05); border-radius: 0.375rem; margin-bottom: 0.5rem;">

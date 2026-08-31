@@ -2083,7 +2083,7 @@ elif menu == "Credits & Contact":
     
     /* Pure CSS Hover Animation for Credits Buttons */
     .credits-btn {
-        display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; 
+        display: flex; align-items: center; justify-content: center; width: 11rem; gap: 0.75rem; padding: 1rem 1rem; 
         background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none !important; 
         border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #ffffff !important; 
         box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -2118,7 +2118,7 @@ elif menu == "Credits & Contact":
             <p style="font-size: 0.85rem; color: #ffffff; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin: 0; font-weight: 700;">Computer Engineering Student</p>
         </div>
         <!-- Interactive Buttons -->
-        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; justify-content: center; width: 100%;">
+        <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; justify-content: center; width: 100%; flex-wrap: wrap;">
             <a href="https://github.com/Noorthistime" target="_blank" class="credits-btn">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">code</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">GitHub</span>
@@ -2126,6 +2126,10 @@ elif menu == "Credits & Contact":
             <a href="mailto:noorsayyed.atwork@gmail.com" class="credits-btn">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">mail</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">Contact</span>
+            </a>
+            <a href="https://www.linkedin.com/in/noor-saiyed/" target="_blank" class="credits-btn">
+                <span class="material-symbols-outlined" style="font-size: 1.2rem;">work</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">LinkedIn</span>
             </a>
         </div>
         <!-- Divider -->

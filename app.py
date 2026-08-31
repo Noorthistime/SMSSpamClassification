@@ -2022,7 +2022,7 @@ elif menu == "Credits & Contact":
     }
     </style>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <div style="display: flex; flex-direction: column; width: 100%; min-height: auto; justify-content: center; align-items: center; position: relative; overflow: hidden; font-family: 'Inter', sans-serif; margin-top: 0px;">
     <!-- Central Premium Glass Card -->
     <div style="position: relative; z-index: 10; width: 100%; max-width: 42rem; background: var(--glass-bg); backdrop-filter: blur(24px); border-radius: 1rem; box-shadow: var(--glass-shadow); border: 1px solid var(--glass-border); padding: 1.5rem; display: flex; flex-direction: column; align-items: center; transition: transform 0.5s ease-out;"
@@ -2043,29 +2043,29 @@ elif menu == "Credits & Contact":
         </div>
         <!-- Typography Header -->
         <div style="text-align: center; margin-bottom: 1.5rem;">
-            <h1 style="font-size: 3rem; color: #e6e0e9; margin: 0 0 0.5rem 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">Saiyed Noor <span style="color: var(--brand-1);">Mohammad</span></h1>
-            <p style="font-size: 0.85rem; color: var(--brand-1); letter-spacing: 0.2em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin: 0; font-weight: 500;">Computer Engineering Student</p>
+            <h1 style="font-size: 3rem; color: #ffffff; margin: 0 0 0.5rem 0; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;">Saiyed Noor Mohammad</h1>
+            <p style="font-size: 0.85rem; color: #ffffff; letter-spacing: 0.2em; text-transform: uppercase; font-family: 'JetBrains Mono', monospace; margin: 0; font-weight: 700;">Computer Engineering Student</p>
         </div>
         <!-- Interactive Buttons -->
         <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; justify-content: center; width: 100%;">
-            <a href="https://github.com/Noorthistime" target="_blank" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.03); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; color: #cbc4d2;" onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.color='#fff';" onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.color='#cbc4d2';">
+            <a href="https://github.com/Noorthistime" target="_blank" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-1)'; this.style.color='#141218'; this.style.borderColor='transparent';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#ffffff'; this.style.borderColor='rgba(255,255,255,0.3)';">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">code</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500;">GitHub</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">GitHub</span>
             </a>
-            <a href="mailto:noorsayyed.atwork@gmail.com" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: var(--brand-1); color: #141218; border-radius: 0.75rem; text-decoration: none; border: 1px solid transparent; transition: all 0.3s; box-shadow: 0 0 15px rgba(0,0,0,0.5);" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+            <a href="mailto:noorsayyed.atwork@gmail.com" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-1)'; this.style.color='#141218'; this.style.borderColor='transparent';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#ffffff'; this.style.borderColor='rgba(255,255,255,0.3)';">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">mail</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600;">Contact</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">Contact</span>
             </a>
         </div>
         <!-- Divider -->
         <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin-bottom: 1rem;"></div>
         <!-- Footer Info -->
         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.05); border-radius: 0.375rem; margin-bottom: 0.5rem;">
-                <span class="material-symbols-outlined" style="font-size: 0.875rem; color: #cbc4d2;">gavel</span>
-                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #cbc4d2;">MIT License</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(255,255,255,0.1); border-radius: 0.375rem; margin-bottom: 0.5rem; border: 1px solid rgba(255,255,255,0.15);">
+                <span class="material-symbols-outlined" style="font-size: 0.875rem; color: #ffffff;">gavel</span>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #ffffff; font-weight: 600;">MIT License</span>
             </div>
-            <p style="font-family: 'JetBrains Mono', monospace; color: rgba(203, 196, 210, 0.6); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; line-height: 1.8; margin: 0;">
+            <p style="font-family: 'JetBrains Mono', monospace; color: rgba(255, 255, 255, 0.9); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; line-height: 1.8; margin: 0; font-weight: 500;">
                 © 2026 Saiyed Noor Mohammad.<br>All Rights Reserved.
             </p>
         </div>

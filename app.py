@@ -2020,6 +2020,21 @@ elif menu == "Credits & Contact":
     html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
         overflow: hidden !important;
     }
+    
+    /* Pure CSS Hover Animation for Credits Buttons */
+    .credits-btn {
+        display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; 
+        background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none !important; 
+        border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #ffffff !important; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .credits-btn:hover {
+        background: var(--brand-1) !important;
+        color: #141218 !important;
+        border-color: transparent !important;
+        transform: translateY(-3px) scale(1.03) !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4) !important;
+    }
     </style>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -2048,11 +2063,11 @@ elif menu == "Credits & Contact":
         </div>
         <!-- Interactive Buttons -->
         <div style="display: flex; gap: 1.5rem; margin-bottom: 1.5rem; justify-content: center; width: 100%;">
-            <a href="https://github.com/Noorthistime" target="_blank" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-1)'; this.style.color='#141218'; this.style.borderColor='transparent';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#ffffff'; this.style.borderColor='rgba(255,255,255,0.3)';">
+            <a href="https://github.com/Noorthistime" target="_blank" class="credits-btn">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">code</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">GitHub</span>
             </a>
-            <a href="mailto:noorsayyed.atwork@gmail.com" style="display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: rgba(255,255,255,0.08); border-radius: 0.75rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.3s; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" onmouseover="this.style.background='var(--brand-1)'; this.style.color='#141218'; this.style.borderColor='transparent';" onmouseout="this.style.background='rgba(255,255,255,0.08)'; this.style.color='#ffffff'; this.style.borderColor='rgba(255,255,255,0.3)';">
+            <a href="mailto:noorsayyed.atwork@gmail.com" class="credits-btn">
                 <span class="material-symbols-outlined" style="font-size: 1.2rem;">mail</span>
                 <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;">Contact</span>
             </a>

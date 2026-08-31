@@ -1333,24 +1333,29 @@ st.markdown("""
 components.html("""
 <script>
     const parentDoc = window.parent.document;
-    const marker = parentDoc.getElementById('hero-scroll-marker');
-    const heroes = parentDoc.querySelectorAll('.premium-hero');
-
-    if (marker && heroes.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                heroes.forEach(hero => {
-                    if (!entry.isIntersecting) {
-                        hero.classList.add('pill-mode');
-                    } else {
-                        hero.classList.remove('pill-mode');
-                    }
-                });
-            });
-        }, { root: null, threshold: 0 });
+    
+    const scrollSentinel = setInterval(() => {
+        const marker = parentDoc.getElementById('hero-scroll-marker');
+        const heroes = parentDoc.querySelectorAll('.premium-hero');
         
-        observer.observe(marker);
-    }
+        if (marker && heroes.length > 0 && !marker.dataset.observerAttached) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    heroes.forEach(hero => {
+                        if (!entry.isIntersecting) {
+                            hero.classList.add('pill-mode');
+                        } else {
+                            hero.classList.remove('pill-mode');
+                        }
+                    });
+                });
+            }, { root: null, threshold: 0 });
+            
+            observer.observe(marker);
+            marker.dataset.observerAttached = 'true';
+            clearInterval(scrollSentinel);
+        }
+    }, 100);
 </script>
 """, height=0, width=0)
 
@@ -2014,34 +2019,39 @@ components.html('''
 <script>
     const parent = window.parent.document;
     
-    // 1. Find the hidden button by its text
-    const buttons = parent.querySelectorAll('button');
-    let hiddenBtn = null;
-    buttons.forEach(b => {
-        if (b.innerText.includes("HIDDEN_TOGGLE_DO_NOT_CLICK")) {
-            hiddenBtn = b;
-        }
-    });
-
-    if (hiddenBtn) {
-        // 2. Hide the button container completely
-        const container = hiddenBtn.closest('.element-container');
-        if (container) {
-            container.style.position = 'absolute';
-            container.style.opacity = '0';
-            container.style.pointerEvents = 'none';
-            container.style.width = '0px';
-            container.style.height = '0px';
-            container.style.display = 'none'; 
-        }
-
-        // 3. Attach click listener to premium-hero
-        const heroes = parent.querySelectorAll('.premium-hero');
-        heroes.forEach(hero => {
-            hero.addEventListener('click', () => {
-                hiddenBtn.click();
-            });
+    const themeSentinel = setInterval(() => {
+        const buttons = parent.querySelectorAll('button');
+        let hiddenBtn = null;
+        buttons.forEach(b => {
+            if (b.innerText.includes("HIDDEN_TOGGLE_DO_NOT_CLICK")) {
+                hiddenBtn = b;
+            }
         });
-    }
+
+        const heroes = parent.querySelectorAll('.premium-hero');
+
+        if (hiddenBtn && heroes.length > 0) {
+            const container = hiddenBtn.closest('.element-container');
+            if (container) {
+                container.style.position = 'absolute';
+                container.style.opacity = '0';
+                container.style.pointerEvents = 'none';
+                container.style.width = '0px';
+                container.style.height = '0px';
+                container.style.display = 'none'; 
+            }
+
+            heroes.forEach(hero => {
+                if (!hero.dataset.clickAttached) {
+                    hero.addEventListener('click', () => {
+                        hiddenBtn.click();
+                    });
+                    hero.dataset.clickAttached = 'true';
+                }
+            });
+            
+            clearInterval(themeSentinel);
+        }
+    }, 100);
 </script>
 ''', height=0)

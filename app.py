@@ -388,14 +388,23 @@ if st.session_state.theme == 'default':
     [data-testid="stSidebar"] [data-testid="stRadio"] div[data-baseweb="radio-group"] {
         display: flex !important;
         flex-direction: column !important;
+        align-items: stretch !important;
         gap: 10px !important;
         padding-top: 10px !important;
         width: 100% !important;
     }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-testid="stRadioGroup"] > div,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div {
+        width: 100% !important;
+        display: flex !important;
+        align-items: stretch !important;
+    }
     
     /* Base glassmorphic card for every navigation item */
     [data-testid="stSidebar"] [data-testid="stRadio"] label,
-    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] {
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-testid="stRadioOption"] {
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
         padding: 12px 16px 12px 46px !important;
@@ -406,6 +415,7 @@ if st.session_state.theme == 'default':
         align-items: center !important;
         width: 100% !important;
         min-width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
         margin-bottom: 0px !important;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
@@ -1002,14 +1012,23 @@ elif st.session_state.theme == 'stitch':
     [data-testid="stSidebar"] [data-testid="stRadio"] div[data-baseweb="radio-group"] {
         display: flex !important;
         flex-direction: column !important;
+        align-items: stretch !important;
         gap: 10px !important;
         padding-top: 10px !important;
         width: 100% !important;
     }
+
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-testid="stRadioGroup"] > div,
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > div {
+        width: 100% !important;
+        display: flex !important;
+        align-items: stretch !important;
+    }
     
     /* Base glassmorphic card for every navigation item */
     [data-testid="stSidebar"] [data-testid="stRadio"] label,
-    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] {
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-testid="stRadioOption"] {
         background: rgba(255, 255, 255, 0.05) !important;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
         padding: 12px 16px 12px 46px !important;
@@ -1020,6 +1039,7 @@ elif st.session_state.theme == 'stitch':
         align-items: center !important;
         width: 100% !important;
         min-width: 100% !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
         margin-bottom: 0px !important;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;

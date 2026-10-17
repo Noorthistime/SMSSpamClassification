@@ -430,6 +430,7 @@ if st.session_state.theme == 'default':
 
     /* Hide native radio input element */
     [data-testid="stSidebar"] [data-testid="stRadio"] label input[type="radio"] {
+        display: none !important;
         position: absolute !important;
         opacity: 0 !important;
         width: 0 !important;
@@ -438,11 +439,15 @@ if st.session_state.theme == 'default':
         pointer-events: none !important;
     }
 
-    /* Hide native BaseWeb radio circle marker only (never hide the text container) */
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has(p)):not(:has(span)),
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-of-type:not(:has(p)):not(:has(span)) {
+    /* Hide native BaseWeb radio circle marker completely (removes extra red dot & native holes) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div[class*="st-"]:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-of-type:not(:has([data-testid="stMarkdownContainer"])) {
+        display: none !important;
         position: absolute !important;
         opacity: 0 !important;
+        visibility: hidden !important;
         width: 0px !important;
         height: 0px !important;
         margin: 0 !important;
@@ -452,7 +457,8 @@ if st.session_state.theme == 'default':
         border-color: transparent !important;
     }
 
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has(p)):not(:has(span)) * {
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])) * {
+        display: none !important;
         background: transparent !important;
         border-color: transparent !important;
         box-shadow: none !important;
@@ -512,30 +518,32 @@ if st.session_state.theme == 'default':
         text-shadow: 0 0 10px rgba(0, 194, 255, 0.4) !important;
     }
 
-    /* Custom empty circular ring for inactive options */
+    /* Solid filled white circular bullet for inactive options (NO HOLES - EXACT IMAGE 2) */
     [data-testid="stSidebar"] [data-testid="stRadio"] label::before {
         content: "" !important;
         position: absolute !important;
-        left: 16px !important;
+        left: 18px !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
-        width: 16px !important;
-        height: 16px !important;
+        width: 13px !important;
+        height: 13px !important;
         border-radius: 50% !important;
-        border: 2px solid rgba(255, 255, 255, 0.4) !important;
-        background-color: transparent !important;
+        border: none !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.4) !important;
         box-sizing: border-box !important;
         transition: all 0.2s ease-in-out !important;
         z-index: 10 !important;
     }
 
-    /* Custom glowing cyan dot for active option */
+    /* Vibrant glowing cyan bullet for active option (EXACT IMAGE 2) */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"]::before,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked)::before {
-        border: 0px solid transparent !important;
+        border: none !important;
         background-color: #00c2ff !important;
-        background-image: radial-gradient(circle, #ffffff 32%, #00c2ff 36%) !important;
-        box-shadow: 0 0 12px rgba(0, 194, 255, 0.75) !important;
+        background-image: radial-gradient(circle, #ffffff 32%, #00c2ff 68%) !important;
+        box-shadow: 0 0 10px #00c2ff, 0 0 18px rgba(0, 194, 255, 0.75) !important;
+        transform: translateY(-50%) scale(1.15) !important;
     }
 
     /* Typography fixes for sidebar header */
@@ -1031,6 +1039,7 @@ elif st.session_state.theme == 'stitch':
 
     /* Hide native radio input element */
     [data-testid="stSidebar"] [data-testid="stRadio"] label input[type="radio"] {
+        display: none !important;
         position: absolute !important;
         opacity: 0 !important;
         width: 0 !important;
@@ -1039,11 +1048,15 @@ elif st.session_state.theme == 'stitch':
         pointer-events: none !important;
     }
 
-    /* Hide native BaseWeb radio circle marker only (never hide the text container) */
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has(p)):not(:has(span)),
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-of-type:not(:has(p)):not(:has(span)) {
+    /* Hide native BaseWeb radio circle marker completely (removes extra red dot & native holes) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div[class*="st-"]:first-child,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-of-type:not(:has([data-testid="stMarkdownContainer"])) {
+        display: none !important;
         position: absolute !important;
         opacity: 0 !important;
+        visibility: hidden !important;
         width: 0px !important;
         height: 0px !important;
         margin: 0 !important;
@@ -1053,7 +1066,8 @@ elif st.session_state.theme == 'stitch':
         border-color: transparent !important;
     }
 
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has(p)):not(:has(span)) * {
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])) * {
+        display: none !important;
         background: transparent !important;
         border-color: transparent !important;
         box-shadow: none !important;
@@ -1113,30 +1127,32 @@ elif st.session_state.theme == 'stitch':
         text-shadow: 0 0 10px rgba(255, 51, 102, 0.4) !important;
     }
 
-    /* Custom empty circular ring for inactive options */
+    /* Solid filled white circular bullet for inactive options (NO HOLES - EXACT IMAGE 2) */
     [data-testid="stSidebar"] [data-testid="stRadio"] label::before {
         content: "" !important;
         position: absolute !important;
-        left: 16px !important;
+        left: 18px !important;
         top: 50% !important;
         transform: translateY(-50%) !important;
-        width: 16px !important;
-        height: 16px !important;
+        width: 13px !important;
+        height: 13px !important;
         border-radius: 50% !important;
-        border: 2px solid rgba(255, 255, 255, 0.4) !important;
-        background-color: transparent !important;
+        border: none !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.4) !important;
         box-sizing: border-box !important;
         transition: all 0.2s ease-in-out !important;
         z-index: 10 !important;
     }
 
-    /* Custom glowing crimson dot for active option */
+    /* Vibrant glowing crimson bullet for active option */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"]::before,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked)::before {
-        border: 0px solid transparent !important;
+        border: none !important;
         background-color: #ff3366 !important;
-        background-image: radial-gradient(circle, #ffffff 32%, #ff3366 36%) !important;
-        box-shadow: 0 0 12px rgba(255, 51, 102, 0.75) !important;
+        background-image: radial-gradient(circle, #ffffff 32%, #ff3366 68%) !important;
+        box-shadow: 0 0 10px #ff3366, 0 0 18px rgba(255, 51, 102, 0.75) !important;
+        transform: translateY(-50%) scale(1.15) !important;
     }
 
     /* Typography fixes for sidebar header — always dark theme */

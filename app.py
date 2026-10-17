@@ -422,6 +422,7 @@ if st.session_state.theme == 'default':
 
     /* Active / Checked state card */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"],
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {
         background: linear-gradient(135deg, rgba(0, 194, 255, 0.22), rgba(79, 70, 229, 0.24)) !important;
         border-color: rgba(0, 194, 255, 0.7) !important;
@@ -439,8 +440,11 @@ if st.session_state.theme == 'default':
         pointer-events: none !important;
     }
 
-    /* Hide native BaseWeb radio circle marker completely (removes extra red dot & native holes) */
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child,
+    /* Hide native radio circle marker completely across ALL Streamlit versions (BaseWeb & React-Aria Cloud) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div > div:first-child:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-testid="stRadioOption"] > div > div:first-child:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label div[class*="e1dm8mpf4"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])),
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child,
     [data-testid="stSidebar"] [data-testid="stRadio"] label > div[class*="st-"]:first-child {
         display: none !important;
@@ -456,6 +460,7 @@ if st.session_state.theme == 'default':
         border-color: transparent !important;
     }
 
+    [data-testid="stSidebar"] [data-testid="stRadio"] label div[class*="e1dm8mpf4"] *,
     [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child *,
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child * {
         display: none !important;
@@ -506,6 +511,7 @@ if st.session_state.theme == 'default':
 
     /* Active text highlight */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"] p,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) p,
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] span,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) span,
@@ -536,6 +542,7 @@ if st.session_state.theme == 'default':
 
     /* Vibrant glowing cyan bullet for active option (EXACT IMAGE 2) */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"]::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"]::before,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked)::before {
         border: none !important;
         background-color: #00c2ff !important;
@@ -1029,6 +1036,7 @@ elif st.session_state.theme == 'stitch':
 
     /* Active / Checked state card */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"],
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) {
         background: linear-gradient(135deg, rgba(255, 51, 102, 0.22), rgba(139, 0, 0, 0.24)) !important;
         border-color: rgba(255, 51, 102, 0.7) !important;
@@ -1046,8 +1054,11 @@ elif st.session_state.theme == 'stitch':
         pointer-events: none !important;
     }
 
-    /* Hide native BaseWeb radio circle marker completely (removes extra red dot & native holes) */
-    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child,
+    /* Hide native radio circle marker completely across ALL Streamlit versions (BaseWeb & React-Aria Cloud) */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div > div:first-child:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-testid="stRadioOption"] > div > div:first-child:not([data-testid="stMarkdownContainer"]),
+    [data-testid="stSidebar"] [data-testid="stRadio"] label div[class*="e1dm8mpf4"],
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child:not(:has([data-testid="stMarkdownContainer"])),
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child,
     [data-testid="stSidebar"] [data-testid="stRadio"] label > div[class*="st-"]:first-child {
         display: none !important;
@@ -1063,6 +1074,7 @@ elif st.session_state.theme == 'stitch':
         border-color: transparent !important;
     }
 
+    [data-testid="stSidebar"] [data-testid="stRadio"] label div[class*="e1dm8mpf4"] *,
     [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child *,
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-baseweb="radio"] > div:first-child * {
         display: none !important;
@@ -1113,6 +1125,7 @@ elif st.session_state.theme == 'stitch':
 
     /* Active text highlight */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"] p,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) p,
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] span,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked) span,
@@ -1143,6 +1156,7 @@ elif st.session_state.theme == 'stitch':
 
     /* Vibrant glowing crimson bullet for active option */
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"]::before,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-selected="true"]::before,
     [data-testid="stSidebar"] [data-testid="stRadio"] label:has(input:checked)::before {
         border: none !important;
         background-color: #ff3366 !important;
